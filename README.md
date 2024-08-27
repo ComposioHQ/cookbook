@@ -1,13 +1,9 @@
-<p>
-  <a href="https://github.com/composiohq/composio/blob/master/README.md">EN</a> | <a href="https://github.com/composiohq/composio/blob/master/README-CN.md">CN</a> | <a href="https://github.com/composiohq/composio/blob/master/README-JP.md">JP</a>
-</p>
-
 <p align="center">
   <a href="https://composio.dev//#gh-dark-mode-only">
-    <img src="./python/docs/imgs/composio_white_font.svg" width="318px" alt="Composio logo" />
+    <img src="./imgs/composio_white_font.svg" width="318px" alt="Composio logo" />
   </a>
   <a href="https://composio.dev//#gh-light-mode-only">
-    <img src="./python/docs/imgs/composio_black_font.svg" width="318px" alt="Composio Logo" />
+    <img src="./imgs/composio_black_font.svg" width="318px" alt="Composio Logo" />
   </a>
 </p>
 <p align="center">
