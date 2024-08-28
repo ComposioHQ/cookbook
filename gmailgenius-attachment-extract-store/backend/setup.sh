@@ -13,6 +13,9 @@ source ~/.venvs/gmail_agent/bin/activate
 echo "Installing libraries from requirements.txt..."
 pip install -r requirements.txt
 
+echo "Updating composio apps"
+composio apps update
+
 # Login to your account
 echo "Login to your Composio acount"
 composio login
