@@ -35,13 +35,13 @@ GmailGenius simplifies the process of finding relevant emails, downloading attac
 Clone the project
 
 ```bash
-  git clone https://github.com/abhishekpatil4/GmailGenius.git
+  git clone https://github.com/ComposioHQ/cookbook.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd GmailGenius
+  cd gmailgenius-attachment-extract-store
 ```
 
 ### Backend
@@ -60,6 +60,11 @@ Start the server
   python main.py
 ```
 
+Start the email monitoring script
+
+```bash
+  python agent.py
+```
 
 ### Frontend
 
