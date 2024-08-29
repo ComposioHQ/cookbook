@@ -11,7 +11,7 @@ const Login = () => {
             const credential = GoogleAuthProvider.credentialFromResult(result);
             const user = result.user;
             await addUserData(user.uid, user.email.split("@")[0]);
-            navigate("/dashboard");
+            navigate("/settings");
         } catch (error) {
             alert(error);
             const errorCode = error.code;
