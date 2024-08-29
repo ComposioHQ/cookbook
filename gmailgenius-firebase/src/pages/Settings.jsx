@@ -7,71 +7,55 @@ import axios from "axios";
 
 const Settings = ({ user }) => {
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(true);
     const [username, setUsername] = useState("");
-    const [gmailAccount, setGmailAccount] = useState("No connected account");
-    const [sheetsAccount, setSheetsAccount] = useState("No connected account");
-    useEffect(() => {
-        const getGmailConnectionStatus = async () => {
-            try {
-                const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true);
-                const data = {
-                    username: user.username,
-                    appType: "GMAIL"
-                };
-                const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/checkconnection`, data, {
-                    headers: {
-                        'Authorization': `Bearer ${idToken}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (response.data.authenticated === "yes") {
-                    setGmailAccount("Connected");
-                }
-            } catch (error) {
-                console.error('Error sending data:', error);
-            }
-        }
-        const getSheetsConnectionStatus = async () => {
-            try {
-                const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true);
-                const data = {
-                    username: user.username,
-                    appType: "GOOGLESHEETS"
-                };
-                const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/checkconnection`, data, {
-                    headers: {
-                        'Authorization': `Bearer ${idToken}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (response.data.authenticated === "yes") {
-                    setSheetsAccount("Connected");
+    const [accountStatuses, setAccountStatuses] = useState({
+        gmail: "No connected account",
+        sheets: "No connected account"
+    });
 
+    const checkConnectionStatus = async (appType) => {
+        try {
+            const idToken = await auth.currentUser.getIdToken(true);
+            const data = {
+                username: user.username,
+                appType: appType
+            };
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/checkconnection`, data, {
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                    'Content-Type': 'application/json'
                 }
-            } catch (error) {
-                console.error('Error sending data:', error);
+            });
+            if (response.data.authenticated === "yes") {
+                setAccountStatuses(prev => ({...prev, [appType.toLowerCase()]: "Connected"}));
             }
+        } catch (error) {
+            console.error(`Error checking ${appType} connection status:`, error);
         }
-        if (gmailAccount === "No connected account") {
-            getGmailConnectionStatus();
-        }
-        if (sheetsAccount === "No connected account") {
-            getSheetsConnectionStatus();
-        }
+    };
+
+    useEffect(() => {
+        const checkAllConnections = async () => {
+            await Promise.all([
+                checkConnectionStatus("GMAIL"),
+                checkConnectionStatus("GOOGLESHEETS")
+            ]);
+        };
+
+        checkAllConnections();
         setUsername(user.username);
-    }, [])
-    const [usernameLoading, setUsernameLoading] = useState(false);
+    }, [user.username]);
     const [gmailAccountLoading, setGmailAccountLoading] = useState(false);
     const [sheetsAccountLoading, setSheetsAccountLoading] = useState(false);
 
-    const linkGmailAccount = async () => {
+    const linkAccount = async (appType) => {
+        const loadingStateSetter = appType === "GMAIL" ? setGmailAccountLoading : setSheetsAccountLoading;
         try {
-            setGmailAccountLoading(true);
+            loadingStateSetter(true);
             const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true);
             const data = {
                 username: user.username,
-                appType: "GMAIL"
+                appType: appType
             };
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/newentity`, data, {
                 headers: {
@@ -87,34 +71,12 @@ const Settings = ({ user }) => {
         } catch (error) {
             console.error('Error sending data:', error);
         } finally {
-            setGmailAccountLoading(false);
+            loadingStateSetter(false);
         }
     }
-    const linkSheetsAccount = async () => {
-        try {
-            setSheetsAccountLoading(true);
-            const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true);
-            const data = {
-                username: user.username,
-                appType: "GOOGLESHEETS"
-            };
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/newentity`, data, {
-                headers: {
-                    'Authorization': `Bearer ${idToken}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (response.data.authenticated === "yes") {
-                alert(response.data.message);
-            } else if (response.data.authenticated === "no") {
-                window.open(response.data.url, '_blank');
-            }
-        } catch (error) {
-            console.error('Error sending data:', error);
-        } finally {
-            setSheetsAccountLoading(false);
-        }
-    }
+
+    const linkGmailAccount = () => linkAccount("GMAIL");
+    const linkSheetsAccount = () => linkAccount("GOOGLESHEETS");
 
     return <div className="flex flex-1 flex-col gap-6 min-h-screen py-8 px-4 mx-auto mt-10 max-w-screen-md text-center lg:py-16 lg:px-12">
         <SettingsAttribute type="username" displayName="Composio Account" value={username} linkAction={() => { }} loading={usernameLoading} />
