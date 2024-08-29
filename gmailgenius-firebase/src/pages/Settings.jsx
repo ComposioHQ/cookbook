@@ -79,9 +79,9 @@ const Settings = ({ user }) => {
     const linkSheetsAccount = () => linkAccount("GOOGLESHEETS");
 
     return <div className="flex flex-1 flex-col gap-6 min-h-screen py-8 px-4 mx-auto mt-10 max-w-screen-md text-center lg:py-16 lg:px-12">
-        <SettingsAttribute type="username" displayName="Composio Account" value={username} linkAction={() => { }} loading={usernameLoading} />
-        <SettingsAttribute type="gmail" displayName="Gmail Account" value={gmailAccount} linkAction={linkGmailAccount} loading={gmailAccountLoading} />
-        <SettingsAttribute type="sheets" displayName="Sheets Account" value={sheetsAccount} linkAction={linkSheetsAccount} loading={sheetsAccountLoading} />
+        <SettingsAttribute type="username" displayName="Composio Account" value={username} linkAction={() => { }} loading={false} />
+        <SettingsAttribute type="gmail" displayName="Gmail Account" value={accountStatuses.gmail} linkAction={linkGmailAccount} loading={gmailAccountLoading} />
+        <SettingsAttribute type="sheets" displayName="Sheets Account" value={accountStatuses.sheets} linkAction={linkSheetsAccount} loading={sheetsAccountLoading} />
     </div>
 };
 
