@@ -14,6 +14,7 @@
     "firebase": "^10.13.0",
     "flowbite": "^2.5.1",
     "flowbite-react": "^0.10.1",
+    "lucide-react": "^0.436.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-loader-spinner": "^6.1.6"
