@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, signOut } from "firebase/auth";
-import { getFirestore, collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc } from "firebase/firestore";
 
 
 const firebaseConfig = {
@@ -56,7 +56,7 @@ export const addUserData = async (uid, username) => {
                 sheetName: "Sheet1",
                 keywords: "",
                 attributes: "",
-                row: "1",
+                row: "2",
             }
         });
         console.log("Document written with id: ", docRef.id);
@@ -65,7 +65,27 @@ export const addUserData = async (uid, username) => {
     }
 }
 
+export const updateUserKeywordsAndAttributes = async (uid, keywords, attributes, sheetTitle) => {
+    try {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("uid", "==", uid));
+        const querySnapshot = await getDocs(q);
 
+        if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            await updateDoc(userDoc.ref, {
+                "sheetsConfig.keywords": keywords,
+                "sheetsConfig.attributes": attributes,
+                "sheetsConfig.sheetTitle": sheetTitle
+            });
+            console.log("Keywords and attributes updated successfully");
+        } else {
+            console.log("User not found");
+        }
+    } catch (error) {
+        console.error("Error updating keywords and attributes:", error);
+    }
+}
 
 export const getUserData = async () => {
     const querySnapshot = await getDocs(collection(db, "users"));
