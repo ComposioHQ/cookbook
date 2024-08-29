@@ -4,12 +4,13 @@ import { auth } from "./config/firebase";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
-import Dashboard from "./pages/Dashboard";
+// import Dashboard from "./pages/Dashboard";
 import ScrollToTop from "./components/ScrollToTop";
 import { useState, useEffect } from "react";
 import Login from "./pages/Login";
 import Settings from "./pages/Settings";
 import Agent from "./pages/Agent";
+import NotFound from "./pages/NotFound";
 
 const ProtectedRoute = ({ user, children }) => {
   if (!user) {
@@ -43,7 +44,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/Agent" element={
           <ProtectedRoute user={user}>
-            <Agent />
+            <Agent user={user} />
           </ProtectedRoute>
         } />
         <Route path="/Settings" element={
@@ -51,15 +52,16 @@ const App = () => {
             <Settings user={user} />
           </ProtectedRoute>
         } />
-        <Route
+        {/* <Route
           path="/dashboard"
           element={
             <ProtectedRoute user={user}>
               <Dashboard user={user} />
             </ProtectedRoute>
           }
-        />
+        /> */}
         <Route path="/" element={<Home />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </BrowserRouter>

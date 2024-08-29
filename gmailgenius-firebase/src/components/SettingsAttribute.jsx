@@ -1,6 +1,6 @@
 import SmallButton from "./smallButton";
 import { Audio } from 'react-loader-spinner'
-const SettingsAttribute = ({ type, displayName, value, linkAction, loading }) => {
+const SettingsAttribute = ({ type, displayName, value, linkAction, loading, buttonName="Link", showButton=true }) => {
     return <div className="flex items-center gap-4">
         <label htmlFor={type} className="text-left block text-lg font-medium text-gray-900 dark:text-white">{displayName}: </label>
         <input
@@ -9,7 +9,7 @@ const SettingsAttribute = ({ type, displayName, value, linkAction, loading }) =>
             value={value}
             readOnly
         ></input>
-        <SmallButton
+        {showButton && <SmallButton
             name={loading ? <Audio
                 height="15"
                 width="70"
@@ -18,9 +18,9 @@ const SettingsAttribute = ({ type, displayName, value, linkAction, loading }) =>
                 ariaLabel="loading"
                 wrapperStyle
                 wrapperClass
-            /> : "Link"}
+            /> : buttonName}
             action={linkAction}
-        />
+        />}
     </div>
 }
 

@@ -1,4 +1,4 @@
-const SmallButton = ({ name, action, color, width = "4.5rem" }) => {
+const SmallButton = ({ name, action, color, width = "4.8rem" }) => {
     const handleClick = () => {
         console.log("button clicked");
     }

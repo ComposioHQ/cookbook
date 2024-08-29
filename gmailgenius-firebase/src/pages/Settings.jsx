@@ -3,77 +3,91 @@ import { useEffect, useState } from "react";
 import SettingsAttribute from "../components/SettingsAttribute";
 import { auth, getUserDetailsByUid } from "../config/firebase";
 import axios from "axios";
+import { Audio } from 'react-loader-spinner';
+import SmallButton from "../components/smallButton";
 
 
 const Settings = ({ user }) => {
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(true);
     const [username, setUsername] = useState("");
     const [gmailAccount, setGmailAccount] = useState("No connected account");
     const [sheetsAccount, setSheetsAccount] = useState("No connected account");
-    useEffect(() => {
-        const getGmailConnectionStatus = async () => {
-            try {
-                const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true);
-                const data = {
-                    username: "abishkpatil",
-                    appType: "GMAIL"
-                };
-                const response = await axios.post('http://localhost:8000/checkconnection', data, {
-                    headers: {
-                        'Authorization': `Bearer ${idToken}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (response.data.authenticated === "yes") {
-                    setGmailAccount("Connected");
-                }
-            } catch (error) {
-                console.error('Error sending data:', error);
-            }
-        }
-        const getSheetsConnectionStatus = async () => {
-            try {
-                const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true);
-                const data = {
-                    username: "abishkpatil",
-                    appType: "GOOGLESHEETS"
-                };
-                const response = await axios.post('http://localhost:8000/checkconnection', data, {
-                    headers: {
-                        'Authorization': `Bearer ${idToken}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (response.data.authenticated === "yes") {
-                    setSheetsAccount("Connected");
-
-                }
-            } catch (error) {
-                console.error('Error sending data:', error);
-            }
-        }
-        if (gmailAccount === "No connected account") {
-            getGmailConnectionStatus();
-        }
-        if (sheetsAccount === "No connected account") {
-            getSheetsConnectionStatus();
-        }
-        setUsername(user.email.split("@")[0]);
-    }, [])
-    const [usernameLoading, setUsernameLoading] = useState(false);
+    const [enableTrigger, setEnableTrigger] = useState(false);
+    const [enableTriggerLoading, setEnableTriggerLoading] = useState(false);
     const [gmailAccountLoading, setGmailAccountLoading] = useState(false);
     const [sheetsAccountLoading, setSheetsAccountLoading] = useState(false);
+    const [userDetails, setUserDetails] = useState(null);
 
-    const linkGmailAccount = async () => {
+    useEffect(() => {
+        const checkConnectionStatus = async (appType, setAccountStatus) => {
+            try {
+                const idToken = await auth.currentUser.getIdToken(true);
+                const data = {
+                    username: user.email.split("@")[0],
+                    appType: appType
+                };
+                const response = await axios.post(`http://localhost:8000/checkconnection`, data, {
+                    headers: {
+                        'Authorization': `Bearer ${idToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.data.authenticated === "yes") {
+                    setAccountStatus("Connected");
+                }
+            } catch (error) {
+                console.error(`Error checking ${appType} connection status:`, error);
+            }
+        };
+
+        const fetchUserDetails = async () => {
+            try {
+                const details = await getUserDetailsByUid(user.uid);
+                setUserDetails(details);
+            } catch (error) {
+                console.error("Error fetching user details:", error);
+            }
+        };
+
+        checkConnectionStatus("GMAIL", setGmailAccount);
+        checkConnectionStatus("GOOGLESHEETS", setSheetsAccount);
+        setUsername(user.email.split("@")[0]);
+        fetchUserDetails();
+    }, [user.email, user.uid]);
+
+    const enableTriggerFun = async () => {
         try {
-            setGmailAccountLoading(true);
-            const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true);
+            setEnableTriggerLoading(true);
+            const idToken = await auth.currentUser.getIdToken(true);
             const data = {
                 username: "abishkpatil",
-                appType: "GMAIL"
             };
-            const response = await axios.post('http://localhost:8000/newentity', data, {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/enabletrigger`, data, {
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.data.authenticated === "yes") {
+                alert(response.data.message);
+            }
+        } catch (error) {
+            console.error('Error enabling trigger:', error);
+        } finally {
+            setEnableTriggerLoading(false);
+        }
+    }
+
+    const linkAccount = async (appType) => {
+        const loadingStateSetter = appType === "GMAIL" ? setGmailAccountLoading : setSheetsAccountLoading;
+        try {
+            loadingStateSetter(true);
+            const idToken = await auth.currentUser.getIdToken(true);
+            const data = {
+                username: user.email.split("@")[0],
+                appType: appType
+            };
+            const response = await axios.post(`http://localhost:8000/newentity`, data, {
                 headers: {
                     'Authorization': `Bearer ${idToken}`,
                     'Content-Type': 'application/json'
@@ -87,39 +101,29 @@ const Settings = ({ user }) => {
         } catch (error) {
             console.error('Error sending data:', error);
         } finally {
-            setGmailAccountLoading(false);
+            loadingStateSetter(false);
         }
     }
-    const linkSheetsAccount = async () => {
-        try {
-            setSheetsAccountLoading(true);
-            const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true);
-            const data = {
-                username: "abishkpatil",
-                appType: "GOOGLESHEETS"
-            };
-            const response = await axios.post('http://localhost:8000/newentity', data, {
-                headers: {
-                    'Authorization': `Bearer ${idToken}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (response.data.authenticated === "yes") {
-                alert(response.data.message);
-            } else if (response.data.authenticated === "no") {
-                window.open(response.data.url, '_blank');
-            }
-        } catch (error) {
-            console.error('Error sending data:', error);
-        } finally {
-            setSheetsAccountLoading(false);
-        }
-    }
+
+    const linkGmailAccount = () => linkAccount("GMAIL");
+    const linkSheetsAccount = () => linkAccount("GOOGLESHEETS");
 
     return <div className="flex flex-1 flex-col gap-6 min-h-screen py-8 px-4 mx-auto mt-10 max-w-screen-md text-center lg:py-16 lg:px-12">
-        <SettingsAttribute type="username" displayName="Composio Account" value={username} linkAction={() => { }} loading={usernameLoading} />
+        <SettingsAttribute type="username" displayName="Composio Account" value={username} linkAction={() => { }} loading={false} />
         <SettingsAttribute type="gmail" displayName="Gmail Account" value={gmailAccount} linkAction={linkGmailAccount} loading={gmailAccountLoading} />
         <SettingsAttribute type="sheets" displayName="Sheets Account" value={sheetsAccount} linkAction={linkSheetsAccount} loading={sheetsAccountLoading} />
+        <SettingsAttribute type="trigger" displayName="Enable Trigger" value={enableTrigger} linkAction={enableTriggerFun} loading={enableTriggerLoading} buttonName="Enable"/>
+        <br />
+        <SettingsAttribute type="sheetid" displayName="Sheet ID" value={userDetails?.sheetsConfig?.spreadsheet_id || "No sheet ID"} linkAction={() => {
+            if (userDetails?.sheetsConfig?.spreadsheet_id) {
+                window.open(`https://docs.google.com/spreadsheets/d/${userDetails.sheetsConfig.spreadsheet_id}`, '_blank');
+            } else {
+                alert("No sheet ID available");
+            }
+        }} loading={false} buttonName="Open" />
+        <SettingsAttribute type="sheettitle" displayName="Sheet Title" value={userDetails?.sheetsConfig?.sheetTitle || "No sheet title configured"} linkAction={() => { }} loading={false} buttonName="View" showButton={false} />
+        <SettingsAttribute type="keywords" displayName="Keywords" value={userDetails?.sheetsConfig?.keywords || "No keywords configured"} linkAction={() => { }} loading={false} buttonName="View" showButton={false} />
+        <SettingsAttribute type="attributes" displayName="Attributes" value={userDetails?.sheetsConfig?.attributes || "No attributes configured"} linkAction={() => { }} loading={false} buttonName="View" showButton={false} />
     </div>
 };
 

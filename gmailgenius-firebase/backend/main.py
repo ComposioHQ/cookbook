@@ -3,8 +3,9 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from firebase.init import auth 
-from entity import createNewEntity, isEntityConnected
+from composio_config import createNewEntity, isEntityConnected, enable_gmail_trigger
 import logging
+from initialize_sheet_agent import createSheet
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -40,6 +41,16 @@ async def handle_request(user_data: UserData, decoded_token: dict = Depends(veri
     res = createNewEntity(username, appType)
     return res
 
+class EnableTriggerData(BaseModel):
+    username: str
+
+@app.post("/enabletrigger")
+async def handle_request(user_data: EnableTriggerData, decoded_token: dict = Depends(verify_token)):
+    user_id = decoded_token['uid']
+    username = user_data.username
+    res = enable_gmail_trigger(username)
+    return res
+
 @app.post("/checkconnection")
 async def handle_request(user_data: UserData, decoded_token: dict = Depends(verify_token)):
     user_id = decoded_token['uid']
@@ -47,6 +58,16 @@ async def handle_request(user_data: UserData, decoded_token: dict = Depends(veri
     appType = user_data.appType
     res = isEntityConnected(username, appType)
     return res
+
+class UserData(BaseModel):
+    username: str
+
+@app.post("/createsheet")
+async def handle_request(user_data: UserData, decoded_token: dict = Depends(verify_token)):
+    username = user_data.username
+    res = createSheet(username)
+    return res
+
 
 if __name__ == "__main__":
     import uvicorn

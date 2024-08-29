@@ -5,8 +5,9 @@ def enable_gmail_trigger(ent_id: str):
     client = Composio()
     entity = client.get_entity(id=ent_id)
     trigger_Config = {'userId': 'me', 'interval': 1, 'labelIds': 'INBOX'}
+    trigger_name = 'GMAIL_NEW_GMAIL_MESSAGE'
     try:
-        entity.enable_trigger(app=App.GMAIL, trigger_name='GMAIL_NEW_GMAIL_MESSAGE', config=trigger_Config)
+        entity.enable_trigger(app=App.GMAIL, trigger_name=trigger_name, config=trigger_Config)
         response = {
             "status": "success",
             "message": f"Trigger {trigger_name} enabled for {ent_id} on Gmail"
@@ -64,5 +65,5 @@ def createNewEntity(ent_id: str, appType: str):
     
 
 
-# print(createNewEntity("abhi_kle2", "GMAIL"))
-# print(enable_gmail_trigger("abhi_kle2"))
+# print(createNewEntity("default", "GMAIL"))
+# print(enable_gmail_trigger("default"))
