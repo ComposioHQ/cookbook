@@ -16,10 +16,10 @@ const Settings = ({ user }) => {
             try {
                 const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true);
                 const data = {
-                    username: "abishkpatil",
+                    username: user.username,
                     appType: "GMAIL"
                 };
-                const response = await axios.post('http://localhost:8000/checkconnection', data, {
+                const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/checkconnection`, data, {
                     headers: {
                         'Authorization': `Bearer ${idToken}`,
                         'Content-Type': 'application/json'
@@ -36,10 +36,10 @@ const Settings = ({ user }) => {
             try {
                 const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true);
                 const data = {
-                    username: "abishkpatil",
+                    username: user.username,
                     appType: "GOOGLESHEETS"
                 };
-                const response = await axios.post('http://localhost:8000/checkconnection', data, {
+                const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/checkconnection`, data, {
                     headers: {
                         'Authorization': `Bearer ${idToken}`,
                         'Content-Type': 'application/json'
@@ -59,7 +59,7 @@ const Settings = ({ user }) => {
         if (sheetsAccount === "No connected account") {
             getSheetsConnectionStatus();
         }
-        setUsername(user.email.split("@")[0]);
+        setUsername(user.username);
     }, [])
     const [usernameLoading, setUsernameLoading] = useState(false);
     const [gmailAccountLoading, setGmailAccountLoading] = useState(false);
@@ -70,10 +70,10 @@ const Settings = ({ user }) => {
             setGmailAccountLoading(true);
             const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true);
             const data = {
-                username: "abishkpatil",
+                username: user.username,
                 appType: "GMAIL"
             };
-            const response = await axios.post('http://localhost:8000/newentity', data, {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/newentity`, data, {
                 headers: {
                     'Authorization': `Bearer ${idToken}`,
                     'Content-Type': 'application/json'
@@ -95,10 +95,10 @@ const Settings = ({ user }) => {
             setSheetsAccountLoading(true);
             const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true);
             const data = {
-                username: "abishkpatil",
+                username: user.username,
                 appType: "GOOGLESHEETS"
             };
-            const response = await axios.post('http://localhost:8000/newentity', data, {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/newentity`, data, {
                 headers: {
                     'Authorization': `Bearer ${idToken}`,
                     'Content-Type': 'application/json'
