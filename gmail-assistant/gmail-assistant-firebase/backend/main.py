@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-from firebase.init import auth 
+from firebase.init import auth
 from composio_config import createNewEntity, isEntityConnected, enable_gmail_trigger
 import logging
 from initialize_sheet_agent import createSheet
@@ -14,13 +14,16 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins, can be a list of specific origins
+    allow_origins=["*"
+                   ],  # Allows all origins, can be a list of specific origins
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods (GET, POST, etc.)
     allow_headers=["*"],  # Allows all headers
 )
 
-def verify_token(auth_credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer())):
+
+def verify_token(auth_credentials: HTTPAuthorizationCredentials = Depends(
+    HTTPBearer())):
     token = auth_credentials.credentials
     try:
         decoded_token = auth.verify_id_token(token)
@@ -28,45 +31,61 @@ def verify_token(auth_credentials: HTTPAuthorizationCredentials = Depends(HTTPBe
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 
+
 # Pydantic model for the request body
 class UserData(BaseModel):
     username: str
     appType: str
 
+
 @app.post("/newentity")
-async def handle_request(user_data: UserData, decoded_token: dict = Depends(verify_token)):
+async def handle_request(user_data: UserData,
+                         decoded_token: dict = Depends(verify_token)):
     user_id = decoded_token['uid']
     username = user_data.username
     appType = user_data.appType
     res = createNewEntity(username, appType)
     return res
 
+
 class EnableTriggerData(BaseModel):
     username: str
 
+
 @app.post("/enabletrigger")
-async def handle_request(user_data: EnableTriggerData, decoded_token: dict = Depends(verify_token)):
+async def handle_request(user_data: EnableTriggerData,
+                         decoded_token: dict = Depends(verify_token)):
     user_id = decoded_token['uid']
     username = user_data.username
     res = enable_gmail_trigger(username)
     return res
 
+
 @app.post("/checkconnection")
-async def handle_request(user_data: UserData, decoded_token: dict = Depends(verify_token)):
+async def handle_request(user_data: UserData,
+                         decoded_token: dict = Depends(verify_token)):
     user_id = decoded_token['uid']
     username = user_data.username
     appType = user_data.appType
     res = isEntityConnected(username, appType)
     return res
 
+
 class UserData(BaseModel):
     username: str
 
+
 @app.post("/createsheet")
-async def handle_request(user_data: UserData, decoded_token: dict = Depends(verify_token)):
+async def handle_request(user_data: UserData,
+                         decoded_token: dict = Depends(verify_token)):
     username = user_data.username
     res = createSheet(username)
     return res
+
+
+@app.get("/")
+async def handle_request():
+    return "ok"
 
 
 if __name__ == "__main__":

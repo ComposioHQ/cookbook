@@ -15,7 +15,16 @@ const AddAgent = ({ user }) => {
         await updateUserKeywordsAndAttributes(user.uid, emailKeywords, attributes, sheetTitle);
         try {
             const idToken = await user.getIdToken(true);
-            const response = await axios.post('http://localhost:8000/createsheet', {
+            // const response = await axios.post(`https://ec0a52f5-b2bf-4b82-8567-1490689ccb58-00-3n71ekg2avu7v.sisko.replit.dev/createsheet`, {
+            //     username: user.email.split("@")[0]
+            // }, {
+            //     headers: {
+            //         'Authorization': `Bearer ${idToken}`,
+            //         'Content-Type': 'application/json'
+            //     }
+            // });
+            const createsheetURL = import.meta.env.VITE_BACKEND_URL + "/createsheet"
+            const response = await axios.post(createsheetURL, {
                 username: user.email.split("@")[0]
             }, {
                 headers: {

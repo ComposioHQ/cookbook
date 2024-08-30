@@ -1,10 +1,10 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SettingsAttribute from "../components/SettingsAttribute";
-import { auth, getUserDetailsByUid } from "../config/firebase";
+import { auth, getUserDetailsByUid, getTriggerStatus } from "../config/firebase";
 import axios from "axios";
 import { Audio } from 'react-loader-spinner';
-import SmallButton from "../components/smallButton";
+import SmallButton from "../components/SmallButton";
 
 
 const Settings = ({ user }) => {
@@ -26,7 +26,14 @@ const Settings = ({ user }) => {
                     username: user.email.split("@")[0],
                     appType: appType
                 };
-                const response = await axios.post(`http://localhost:8000/checkconnection`, data, {
+                // const response = await axios.post(`https://ec0a52f5-b2bf-4b82-8567-1490689ccb58-00-3n71ekg2avu7v.sisko.replit.dev/checkconnection`, data, {
+                //     headers: {
+                //         'Authorization': `Bearer ${idToken}`,
+                //         'Content-Type': 'application/json'
+                //     }
+                // });
+                const checkconnectionURL = import.meta.env.VITE_BACKEND_URL + "/checkconnection"
+                const response = await axios.post(checkconnectionURL, data, {
                     headers: {
                         'Authorization': `Bearer ${idToken}`,
                         'Content-Type': 'application/json'
@@ -49,8 +56,14 @@ const Settings = ({ user }) => {
             }
         };
 
+        const checkTriggerStats = async () => {
+            const res = await getTriggerStatus(user.email.split("@")[0])
+            setEnableTrigger(res)
+        }
+
         checkConnectionStatus("GMAIL", setGmailAccount);
         checkConnectionStatus("GOOGLESHEETS", setSheetsAccount);
+        checkTriggerStats();
         setUsername(user.email.split("@")[0]);
         fetchUserDetails();
     }, [user.email, user.uid]);
@@ -60,9 +73,16 @@ const Settings = ({ user }) => {
             setEnableTriggerLoading(true);
             const idToken = await auth.currentUser.getIdToken(true);
             const data = {
-                username: "abishkpatil",
+                username: user.email.split("@")[0],
             };
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/enabletrigger`, data, {
+            // const response = await axios.post(`https://ec0a52f5-b2bf-4b82-8567-1490689ccb58-00-3n71ekg2avu7v.sisko.replit.dev/enabletrigger`, data, {
+            //     headers: {
+            //         'Authorization': `Bearer ${idToken}`,
+            //         'Content-Type': 'application/json'
+            //     }
+            // });
+            const enableTriggerURL = import.meta.env.VITE_BACKEND_URL + "/enabletrigger"
+            const response = await axios.post(enableTriggerURL, data, {
                 headers: {
                     'Authorization': `Bearer ${idToken}`,
                     'Content-Type': 'application/json'
@@ -87,7 +107,14 @@ const Settings = ({ user }) => {
                 username: user.email.split("@")[0],
                 appType: appType
             };
-            const response = await axios.post(`http://localhost:8000/newentity`, data, {
+            // const response = await axios.post(`https://ec0a52f5-b2bf-4b82-8567-1490689ccb58-00-3n71ekg2avu7v.sisko.replit.dev/newentity`, data, {
+            //     headers: {
+            //         'Authorization': `Bearer ${idToken}`,
+            //         'Content-Type': 'application/json'
+            //     }
+            // });
+            const newEntityURL = import.meta.env.VITE_BACKEND_URL + "/newentity"
+            const response = await axios.post(newEntityURL, data, {
                 headers: {
                     'Authorization': `Bearer ${idToken}`,
                     'Content-Type': 'application/json'
@@ -109,10 +136,10 @@ const Settings = ({ user }) => {
     const linkSheetsAccount = () => linkAccount("GOOGLESHEETS");
 
     return <div className="flex flex-1 flex-col gap-6 min-h-screen py-8 px-4 mx-auto mt-10 max-w-screen-md text-center lg:py-16 lg:px-12">
-        <SettingsAttribute type="username" displayName="Composio Account" value={username} linkAction={() => { }} loading={false} />
+        <SettingsAttribute type="username" displayName="Composio Account" value={username} linkAction={() => { alert("Account already connected") }} loading={false} />
         <SettingsAttribute type="gmail" displayName="Gmail Account" value={gmailAccount} linkAction={linkGmailAccount} loading={gmailAccountLoading} />
         <SettingsAttribute type="sheets" displayName="Sheets Account" value={sheetsAccount} linkAction={linkSheetsAccount} loading={sheetsAccountLoading} />
-        <SettingsAttribute type="trigger" displayName="Enable Trigger" value={enableTrigger} linkAction={enableTriggerFun} loading={enableTriggerLoading} buttonName="Enable"/>
+        <SettingsAttribute type="trigger" displayName="Enable Trigger" value={enableTrigger} linkAction={enableTriggerFun} loading={enableTriggerLoading} buttonName="Enable" />
         <br />
         <SettingsAttribute type="sheetid" displayName="Sheet ID" value={userDetails?.sheetsConfig?.spreadsheet_id || "No sheet ID"} linkAction={() => {
             if (userDetails?.sheetsConfig?.spreadsheet_id) {

@@ -10,6 +10,7 @@ from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from typing import Any, Dict
 import requests
+from pathlib import Path
 
 load_dotenv()
 
@@ -47,7 +48,7 @@ class incrementCounter(BaseTool):
 
 #Get the attachment that was recently downloaded
 def get_recent_attachment() -> str:
-    pdf_files = glob.glob(os.path.join("/Users/abhishekpatil/.composio/output/", "*.pdf")) #modify path as per need
+    pdf_files = glob.glob(os.path.join("/Users/abhishekpatil/Desktop/cookbook-local/gmailgenius-attachment-extract-store/backend/attachments/", "*.pdf")) #modify path as per need
     if not pdf_files:
         return None  
     
@@ -69,7 +70,7 @@ class extractorTool(BaseTool):
 #Tools
 IncrementCounter = incrementCounter()
 Extractor_tool=extractorTool()
-composio_toolset = ComposioToolSet()
+composio_toolset = ComposioToolSet(output_dir=Path.home()/"attachments",entity_id="abishkpatil")
 google_tools = composio_toolset.get_actions(
     actions=[
         Action.GMAIL_GET_ATTACHMENT,
