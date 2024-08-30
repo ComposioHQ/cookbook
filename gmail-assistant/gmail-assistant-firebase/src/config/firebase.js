@@ -51,6 +51,7 @@ export const addUserData = async (uid, username) => {
             username: username,
             gmailAccountConnected: false,
             sheetAccountConnected: false,
+            gmailTriggerEnabled: false,
             sheetsConfig: {
                 spreadsheet_id: "",
                 sheetName: "Sheet1",
@@ -108,13 +109,33 @@ export const getUserDetailsByUid = async (uid) => {
 
         if (!querySnapshot.empty) {
             const userDoc = querySnapshot.docs[0];
-            return userDoc.data(); 
+            return userDoc.data();
         } else {
             console.log("User does not exist.");
-            return null; 
+            return null;
         }
     } catch (error) {
         console.error("Error getting user details:", error);
+        return null;
+    }
+}
+
+export const getTriggerStatus = async (username) => {
+    try {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("username", "==", username));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            const triggerStatus = userDoc.data().gmailTriggerEnabled;
+            return triggerStatus;
+        } else {
+            console.log("User does not exist.");
+            return null;
+        }
+    } catch (error) {
+        console.error("Error getting trigger status:", error);
         return null;
     }
 }

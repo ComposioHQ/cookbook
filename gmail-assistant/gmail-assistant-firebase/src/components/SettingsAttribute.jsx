@@ -1,4 +1,4 @@
-import SmallButton from "./smallButton";
+import SmallButton from "./SmallButton";
 import { Audio } from 'react-loader-spinner'
 const SettingsAttribute = ({ type, displayName, value, linkAction, loading, buttonName="Link", showButton=true }) => {
     return <div className="flex items-center gap-4">
