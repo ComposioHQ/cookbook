@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Settings from "./pages/Settings";
 import Agent from "./pages/Agent";
 import NotFound from "./pages/NotFound";
+import SkeletonLoader from "./components/SkeletonLoader";
 
 const ProtectedRoute = ({ user, children }) => {
   if (!user) {
@@ -33,7 +34,7 @@ const App = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Or any loading indicator
+    return <SkeletonLoader />
   }
 
   return (
@@ -42,11 +43,11 @@ const App = () => {
       <ScrollToTop />
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/Agent" element={
+        {/* <Route path="/Agent" element={
           <ProtectedRoute user={user}>
             <Agent user={user} />
           </ProtectedRoute>
-        } />
+        } /> */}
         <Route path="/Settings" element={
           <ProtectedRoute user={user}>
             <Settings user={user} />

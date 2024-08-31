@@ -38,8 +38,11 @@ const Avatar = ({ user }) => {
                     {/* <li>
                         <Link to="/dashboard" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</Link>
                     </li> */}
-                    <li>
+                    {/* <li>
                         <Link to="/agent" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Add Agent</Link>
+                    </li> */}
+                    <li>
+                        <Link to="/" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Home</Link>
                     </li>
                     <li>
                         <Link to="/settings" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</Link>
