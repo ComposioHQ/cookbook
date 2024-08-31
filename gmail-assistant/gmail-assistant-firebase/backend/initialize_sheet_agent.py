@@ -5,6 +5,7 @@ from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from crewai_tools.tools.base_tool import BaseTool
 from firebase.init import db
+import os
 
 load_dotenv()
 llm = ChatOpenAI(model="gpt-4o")
