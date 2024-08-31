@@ -121,7 +121,7 @@ const Settings = ({ user }) => {
         <SettingsAttribute type="username" displayName="Composio Account" value={username} linkAction={() => { alert("Account already connected") }} loading={false} />
         <SettingsAttribute type="gmail" displayName="Gmail Account" value={gmailAccount} linkAction={linkGmailAccount} loading={gmailAccountLoading} />
         <SettingsAttribute type="sheets" displayName="Sheets Account" value={sheetsAccount} linkAction={linkSheetsAccount} loading={sheetsAccountLoading} />
-        <SettingsAttribute type="trigger" displayName="Enable Trigger" value={enableTrigger} linkAction={enableTriggerFun} loading={enableTriggerLoading} buttonName="Enable" />
+        <SettingsAttribute type="trigger" displayName="Enable Gmail Trigger" value={enableTrigger ? "Enabled" : "Disabled"} linkAction={enableTriggerFun} loading={enableTriggerLoading} buttonName={"Enable"} />
         <br />
         <SettingsAttribute type="sheetid" displayName="Sheet ID" value={userDetails?.sheetsConfig?.spreadsheet_id || "No sheet ID"} linkAction={() => {
             if (userDetails?.sheetsConfig?.spreadsheet_id) {
