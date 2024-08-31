@@ -26,12 +26,6 @@ const Settings = ({ user }) => {
                     username: user.email.split("@")[0],
                     appType: appType
                 };
-                // const response = await axios.post(`https://ec0a52f5-b2bf-4b82-8567-1490689ccb58-00-3n71ekg2avu7v.sisko.replit.dev/checkconnection`, data, {
-                //     headers: {
-                //         'Authorization': `Bearer ${idToken}`,
-                //         'Content-Type': 'application/json'
-                //     }
-                // });
                 const checkconnectionURL = import.meta.env.VITE_BACKEND_URL + "/checkconnection"
                 const response = await axios.post(checkconnectionURL, data, {
                     headers: {
@@ -75,12 +69,6 @@ const Settings = ({ user }) => {
             const data = {
                 username: user.email.split("@")[0],
             };
-            // const response = await axios.post(`https://ec0a52f5-b2bf-4b82-8567-1490689ccb58-00-3n71ekg2avu7v.sisko.replit.dev/enabletrigger`, data, {
-            //     headers: {
-            //         'Authorization': `Bearer ${idToken}`,
-            //         'Content-Type': 'application/json'
-            //     }
-            // });
             const enableTriggerURL = import.meta.env.VITE_BACKEND_URL + "/enabletrigger"
             const response = await axios.post(enableTriggerURL, data, {
                 headers: {
@@ -107,12 +95,6 @@ const Settings = ({ user }) => {
                 username: user.email.split("@")[0],
                 appType: appType
             };
-            // const response = await axios.post(`https://ec0a52f5-b2bf-4b82-8567-1490689ccb58-00-3n71ekg2avu7v.sisko.replit.dev/newentity`, data, {
-            //     headers: {
-            //         'Authorization': `Bearer ${idToken}`,
-            //         'Content-Type': 'application/json'
-            //     }
-            // });
             const newEntityURL = import.meta.env.VITE_BACKEND_URL + "/newentity"
             const response = await axios.post(newEntityURL, data, {
                 headers: {
