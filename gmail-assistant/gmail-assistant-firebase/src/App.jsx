@@ -42,11 +42,11 @@ const App = () => {
       <ScrollToTop />
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/Agent" element={
+        {/* <Route path="/Agent" element={
           <ProtectedRoute user={user}>
             <Agent user={user} />
           </ProtectedRoute>
-        } />
+        } /> */}
         <Route path="/Settings" element={
           <ProtectedRoute user={user}>
             <Settings user={user} />
