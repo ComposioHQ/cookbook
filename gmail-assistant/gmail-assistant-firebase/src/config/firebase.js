@@ -40,7 +40,7 @@ const doesUserExist = async (username) => {
     }
 }
 
-export const addUserData = async (uid, username) => {
+export const addUserData = async (uid, username, email) => {
     try {
         const exist = await doesUserExist(username);
         if (exist) {
@@ -49,6 +49,7 @@ export const addUserData = async (uid, username) => {
         const docRef = await addDoc(collection(db, "users"), {
             uid: uid,
             username: username,
+            email: email,
             gmailAccountConnected: false,
             sheetAccountConnected: false,
             gmailTriggerEnabled: false,
