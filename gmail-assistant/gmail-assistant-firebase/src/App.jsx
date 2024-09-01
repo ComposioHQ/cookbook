@@ -12,6 +12,7 @@ import Settings from "./pages/Settings";
 import Agent from "./pages/Agent";
 import NotFound from "./pages/NotFound";
 import SkeletonLoader from "./components/SkeletonLoader";
+import { SnackbarProvider } from 'notistack'
 
 const ProtectedRoute = ({ user, children }) => {
   if (!user) {
@@ -39,21 +40,22 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Navbar user={user} />
-      <ScrollToTop />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        {/* <Route path="/Agent" element={
+      <SnackbarProvider autoHideDuration={3000} preventDuplicate={true} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <Navbar user={user} />
+        <ScrollToTop />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          {/* <Route path="/Agent" element={
           <ProtectedRoute user={user}>
             <Agent user={user} />
           </ProtectedRoute>
         } /> */}
-        <Route path="/Settings" element={
-          <ProtectedRoute user={user}>
-            <Settings user={user} />
-          </ProtectedRoute>
-        } />
-        {/* <Route
+          <Route path="/Settings" element={
+            <ProtectedRoute user={user}>
+              <Settings user={user} />
+            </ProtectedRoute>
+          } />
+          {/* <Route
           path="/dashboard"
           element={
             <ProtectedRoute user={user}>
@@ -61,10 +63,11 @@ const App = () => {
             </ProtectedRoute>
           }
         /> */}
-        <Route path="/" element={<Home />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Footer />
+          <Route path="/" element={<Home />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Footer />
+      </SnackbarProvider>
     </BrowserRouter>
   );
 }
