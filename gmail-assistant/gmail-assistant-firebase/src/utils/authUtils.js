@@ -7,7 +7,7 @@ export const signUpWithGoogle = async (navigate) => {
     try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
-        await addUserData(user.uid, user.email.split("@")[0]);
+        await addUserData(user.uid, user.email.split("@")[0], user.email);
         navigate("/settings");
     } catch (error) {
         alert(error);
