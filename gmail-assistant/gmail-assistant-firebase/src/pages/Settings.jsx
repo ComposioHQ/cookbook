@@ -42,6 +42,7 @@ const Settings = ({ user }) => {
             setAddingAgent(false);
             return;
         }
+        enqueueSnackbar('Creating new google sheet with title: ' + sheetTitle, { variant: 'success' });
         await updateUserKeywordsAndAttributes(user.uid, emailKeywords, attributes, sheetTitle);
         try {
             const idToken = await user.getIdToken(true);
@@ -58,6 +59,7 @@ const Settings = ({ user }) => {
             if (response.data) {
                 await updateUserKeywordsAndAttributes(user.uid, emailKeywords, attributes, sheetTitle);
                 enqueueSnackbar('Sheet created successfully and attributes updated.', { variant: 'success' });
+                enqueueSnackbar('A test email has been sent to your gmail, wait & watch the magic!', { variant: 'success' });
                 const details = await fetchUserDetails();
                 const spreadsheetId = details.sheetsConfig.spreadsheet_id;
                 const spreadsheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
@@ -202,10 +204,10 @@ const Settings = ({ user }) => {
         <div className="flex justify-center mt-8">
             <SmallButton width="14rem" name={addingAgent ? <Audio
                 height="15"
-                width="120"
+                width="200"
                 color="white"
                 ariaLabel="loading"
-            /> : "Activate My Email Genius!"} action={handleAddAgent} />
+            /> : "Activate My Gmail Genius!"} action={handleAddAgent} />
         </div>
     </div>
 };
