@@ -17,7 +17,6 @@ creds = {
     os.environ.get("auth_provider_x509_cert_url"),
     "client_x509_cert_url": os.environ.get("client_x509_cert_url"),
 }
-cred = credentials.Certificate(creds)
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()

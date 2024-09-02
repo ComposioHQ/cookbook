@@ -6,9 +6,10 @@ import axios from "axios";
 import { updateUserKeywordsAndAttributes } from '../config/firebase';
 import SmallButton from "../components/SmallButton";
 import { Audio } from 'react-loader-spinner';
-
+import { useSnackbar } from 'notistack'
 
 const Settings = ({ user }) => {
+    const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [gmailAccount, setGmailAccount] = useState("No connected account");
@@ -23,14 +24,25 @@ const Settings = ({ user }) => {
     const [attributes, setAttributes] = useState();
     const [addingAgent, setAddingAgent] = useState(false);
 
+    const fetchUserDetails = async () => {
+        try {
+            const details = await getUserDetailsByUid(user.uid);
+            setUserDetails(details);
+            return details;
+        } catch (error) {
+            console.error("Error fetching user details:", error);
+        }
+    };
+
     const handleAddAgent = async (e) => {
         e.preventDefault();
         setAddingAgent(true);
         if (!emailKeywords || !attributes || !sheetTitle) {
-            alert("Please fill in all fields: Email Keywords, Attributes, and Sheet Title.");
+            enqueueSnackbar("Please fill in all fields: Email Keywords, Attributes, and Sheet Title.", { variant: 'warning' });
             setAddingAgent(false);
             return;
         }
+        enqueueSnackbar('Creating new google sheet with title: ' + sheetTitle, { variant: 'success' });
         await updateUserKeywordsAndAttributes(user.uid, emailKeywords, attributes, sheetTitle);
         try {
             const idToken = await user.getIdToken(true);
@@ -42,17 +54,22 @@ const Settings = ({ user }) => {
                     'Authorization': `Bearer ${idToken}`,
                     'Content-Type': 'application/json'
                 }
-            });
+            })
 
             if (response.data) {
                 await updateUserKeywordsAndAttributes(user.uid, emailKeywords, attributes, sheetTitle);
-                alert('Sheet created successfully and attributes updated.');
+                enqueueSnackbar('Sheet created successfully and attributes updated.', { variant: 'success' });
+                enqueueSnackbar('A test email has been sent to your gmail, wait & watch the magic!', { variant: 'success' });
+                const details = await fetchUserDetails();
+                const spreadsheetId = details.sheetsConfig.spreadsheet_id;
+                const spreadsheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
+                window.open(spreadsheetUrl, '_blank');
             } else {
-                alert('Failed to create sheet.');
+                enqueueSnackbar('Failed to create sheet.', { variant: 'error' });
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred while saving.');
+            enqueueSnackbar('An error occurred while creating sheet.', { variant: 'error' });
         } finally {
             setAddingAgent(false);
         }
@@ -81,14 +98,7 @@ const Settings = ({ user }) => {
             }
         };
 
-        const fetchUserDetails = async () => {
-            try {
-                const details = await getUserDetailsByUid(user.uid);
-                setUserDetails(details);
-            } catch (error) {
-                console.error("Error fetching user details:", error);
-            }
-        };
+        fetchUserDetails();
 
         const checkTriggerStats = async () => {
             const res = await getTriggerStatus(user.email.split("@")[0])
@@ -116,10 +126,9 @@ const Settings = ({ user }) => {
                     'Content-Type': 'application/json'
                 }
             });
-            if (response.data.authenticated === "yes") {
-                alert(response.data.message);
-            }
+            enqueueSnackbar("Trigger enabled", { variant: 'success' });
         } catch (error) {
+            enqueueSnackbar("Error enabling trigger", { variant: 'error' });
             console.error('Error enabling trigger:', error);
         } finally {
             setEnableTriggerLoading(false);
@@ -163,7 +172,7 @@ const Settings = ({ user }) => {
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white text-center mx-4">Connect Accounts</h1>
             <hr className="flex-grow border-t border-gray-300 dark:border-gray-700" />
         </div>
-        <SettingsAttribute type="username" displayName="Composio Account" value={username} linkAction={() => { alert("Account already connected") }} loading={false} />
+        <SettingsAttribute type="username" displayName="Composio Account" value={username} linkAction={() => { enqueueSnackbar("Account already connected", { variant: 'success' }) }} loading={false} />
         <SettingsAttribute type="gmail" displayName="Gmail Account" value={gmailAccount} linkAction={linkGmailAccount} loading={gmailAccountLoading} />
         <SettingsAttribute type="sheets" displayName="Sheets Account" value={sheetsAccount} linkAction={linkSheetsAccount} loading={sheetsAccountLoading} />
         <SettingsAttribute type="trigger" displayName="Enable Gmail Trigger" value={enableTrigger ? "Enabled" : "Disabled"} linkAction={enableTriggerFun} loading={enableTriggerLoading} buttonName={"Enable"} />
@@ -180,25 +189,25 @@ const Settings = ({ user }) => {
                 alert("No sheet ID available");
             }
         }} loading={false} buttonName="Open" />
-        <SettingsAttribute 
-            type="sheettitle" 
-            displayName="Sheet Title" 
-            value={sheetTitle || "e.g., Invoices"} 
-            loading={false} 
-            buttonName="View" 
-            showButton={false} 
-            textArea={true} 
-            onChangeFunction={setSheetTitle} 
+        <SettingsAttribute
+            type="sheettitle"
+            displayName="Sheet Title"
+            value={userDetails?.sheetsConfig?.sheetTitle || "e.g., Invoices from gmail"}
+            loading={false}
+            buttonName="View"
+            showButton={false}
+            textArea={true}
+            onChangeFunction={setSheetTitle}
         />
-        <SettingsAttribute type="keywords" displayName="Keywords" value={emailKeywords || "e.g., Apple TV, Invoice"} loading={false} buttonName="View" showButton={false} textArea={true} onChangeFunction={setEmailKeywords} />
-        <SettingsAttribute type="attributes" displayName="Attributes" value={attributes || "e.g., Invoice Number, Invoice Amount"} loading={false} buttonName="View" showButton={false} textArea={true} onChangeFunction={setAttributes} />
+        <SettingsAttribute type="keywords" displayName="Keywords" value={userDetails?.sheetsConfig?.keywords || "e.g., Apple TV, Invoice"} loading={false} buttonName="View" showButton={false} textArea={true} onChangeFunction={setEmailKeywords} />
+        <SettingsAttribute type="attributes" displayName="Attributes" value={userDetails?.sheetsConfig?.attributes || "e.g., Invoice Number, Invoice Amount"} loading={false} buttonName="View" showButton={false} textArea={true} onChangeFunction={setAttributes} />
         <div className="flex justify-center mt-8">
-            <SmallButton width="10rem" name={addingAgent ? <Audio
+            <SmallButton width="14rem" name={addingAgent ? <Audio
                 height="15"
-                width="120"
+                width="200"
                 color="white"
                 ariaLabel="loading"
-            /> : "Add Agent"} action={handleAddAgent} />
+            /> : "Activate My Gmail Genius!"} action={handleAddAgent} />
         </div>
     </div>
 };
