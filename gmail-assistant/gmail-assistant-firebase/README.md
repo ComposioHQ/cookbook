@@ -25,7 +25,7 @@ GmailGenius simplifies the process of finding relevant emails, downloading attac
 - Frontend: ReactJS, Vite, TailwindCSS
 - Backend: Python, FastAPI
 - AI Agent: CrewAI, Composio, OpenAI
-
+- Composio tools: [Gmail](https://app.composio.dev/app/gmail), [Google Sheets](https://app.composio.dev/app/googlesheets)
 
 ## Run Locally
 
