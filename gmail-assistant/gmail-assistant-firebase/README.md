@@ -16,10 +16,12 @@ GmailGenius simplifies the process of finding relevant emails, downloading attac
 
 ### Under the hood, the AI agent divides the task into multiple steps and executes them:
 
+<img width="1664" alt="Screenshot 2024-09-02 at 12 53 53 AM" src="https://github.com/user-attachments/assets/07d51b40-dbd1-4406-9a28-942a4c1e6f86">
+
 1. **Retrieves emails from Gmail** that match the keyword/phrase criteria.
 2. **Downloads** the relevant attachments.
-3. **Extracts useful attributes** from the attachments using Nanonets.
-4. **Stores** the extracted data in the linked Google Sheet
+3. **Extracts useful attributes** from the email body & attachments.
+4. **Stores** the extracted data in the linked Google Sheet.
 
 ## Tech Stack
 - Frontend: ReactJS, Vite, TailwindCSS
