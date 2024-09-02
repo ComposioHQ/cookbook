@@ -34,23 +34,25 @@ GmailGenius simplifies the process of finding relevant emails, downloading attac
 - Composio tools: [Gmail](https://app.composio.dev/app/gmail), [Google Sheets](https://app.composio.dev/app/googlesheets)
 
 ## Run Locally
+### Setup tutorial
+[![gmailgenius-demo](https://github.com/user-attachments/assets/abb24495-d242-42f3-8cff-599182f735f4)](https://drive.google.com/file/d/1kC9oVSUatqQ6Tcs3u6CTsVsmczzG-F6k/preview)
 
 Clone the project
 
 ```bash
-  git clone https://github.com/abhishekpatil4/GmailGenius.git
+  git clone https://github.com/ComposioHQ/cookbook.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd GmailGenius
+  cd gmail-assistant/gmail-assistant-firebase
 ```
 
 ### Backend
 
 Go to backend dir & run setup script, this will create a virtual environment & download necessary libraries (Note: if you're unable to execute then grant permisson -> chmod +x setup.sh)
-You'll then be prompted to login to **Composio**, link **Gmail** & **Goole Sheets**. 
+You'll then be prompted to login to **Composio**, link **Gmail** & **Google Sheets**. 
 Add API keys in **.env file**
 
 ```bash
@@ -63,6 +65,11 @@ Start the server
   python main.py
 ```
 
+Start the agent
+
+```bash
+  python agent.py
+```
 
 ### Frontend
 
@@ -77,4 +84,17 @@ Start the server
 ```bash
   npm run dev
 ```
+
+### Composio Login
+If you're prompted to login & enter API key, run the below command to login
+
+```bash
+  composio login
+```
+
+You'll be redirected to composio website, login, get the API key and paste it
+
+## 🛡️ License
+
+Composio is licensed under the Elastic License - see the [LICENSE](https://github.com/composiodev/composio/blob/master/LICENSE) file for details.
   
