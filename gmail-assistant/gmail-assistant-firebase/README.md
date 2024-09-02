@@ -1,6 +1,7 @@
 
+
 # ⚡️GmailGenius: Supercharge your Gmail
-*Effortlessly find emails, extract data from attachments, and organize it in a spreadsheet*
+*Automatically processes new emails, extracts data from attachments, and organizes everything in a spreadsheet!*
 
 ## Demo
 [![gmailgenius-demo](https://github.com/user-attachments/assets/abb24495-d242-42f3-8cff-599182f735f4)](https://drive.google.com/file/d/1aoKGYiq5QKr037Q5A9v58JERe0aGjXiC/preview)
@@ -8,12 +9,9 @@
 ## Description
 GmailGenius simplifies the process of finding relevant emails, downloading attachments, and extracting key data. Here's how it works:
 
-<img src="https://github.com/user-attachments/assets/4930cbcb-3427-48e1-8e54-9d78c769b619" alt="gmailgenius" width="600" />
-
-
-1. **Sign up on GmailGenius** and link your Gmail account and Google Sheet.
-2. **Enter keywords** you want to search for in your Gmail.
-3. **GmailGenius finds emails and attachments** from Gmail that match your keyword criteria.
+1. **Sign up on GmailGenius** and link your Gmail account and Google Sheet
+2. **Enter keywords** you want the AI agent to look for in your email
+3. **GmailGenius finds emails and attachments** from Gmail that match your keyword criteria
 4. **Useful information from the attachments is extracted and stored** in your linked Google Sheet.
 
 ### Under the hood, the AI agent divides the task into multiple steps and executes them:
