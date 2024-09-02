@@ -3,8 +3,7 @@
 *Effortlessly find emails, extract data from attachments, and organize it in a spreadsheet*
 
 ## Demo
-[![Watch on Loom](https://img.shields.io/badge/Watch%20on-Loom-brightgreen?logo=loom&style=for-the-badge)](https://www.loom.com/embed/c1ff7adf304d47259f71fae09e5f738c?sid=2d11ef56-1fed-4c1d-86b4-1cb4dc449a43)
-[![Screenshot 2024-08-21 at 11 21 19 PM](https://github.com/user-attachments/assets/ab1c9158-2c2e-4ccb-8a3f-bf35a7899c21)](https://www.loom.com/embed/c1ff7adf304d47259f71fae09e5f738c?sid=2d11ef56-1fed-4c1d-86b4-1cb4dc449a43)
+[![gmailgenius-demo](https://github.com/user-attachments/assets/abb24495-d242-42f3-8cff-599182f735f4)](https://drive.google.com/file/d/1aoKGYiq5QKr037Q5A9v58JERe0aGjXiC/preview)
 
 ## Description
 GmailGenius simplifies the process of finding relevant emails, downloading attachments, and extracting key data. Here's how it works:
