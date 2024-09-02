@@ -39,7 +39,7 @@ const Footer = () => {
             </div>
             <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
             <div className="flex justify-center">
-                <span className="text-sm text-gray-500 text-center dark:text-gray-400">© 2024 GmailGenius | Made with ❤️ by <a href="https://composio.dev" className="hover:underline">Composio</a></span>
+                <span className="text-sm text-gray-500 text-center dark:text-gray-400">© 2024 GmailGenius | Made with ❤️ by <a href="https://composio.dev" className="hover:underline" target="_blank" rel="noopener noreferrer">Composio</a></span>
             </div>
         </div>
     </footer>
