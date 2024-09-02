@@ -2,6 +2,8 @@ from composio import ComposioToolSet, App, Composio, Action
 from composio.client.exceptions import NoItemsFound
 from firebase.init import db
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def update_gmail_trigger_status(ent_id: str) -> bool:
@@ -91,9 +93,10 @@ def createNewEntity(ent_id: str, appType: str):
 
     except NoItemsFound as e:
         # Create a request to initiate connection
+        redirect_url = os.environ.get("FRONTEND_URL") + "/settings"
         request = entity.initiate_connection(
             app_enum,
-            redirect_url="https://gmailgenius-fb.vercel.app/settings")
+            redirect_url=redirect_url)
         response = {
             "authenticated": "no",
             "message":
@@ -108,3 +111,5 @@ def createNewEntity(ent_id: str, appType: str):
 
 # print(createNewEntity("default", "GMAIL"))
 # print(enable_gmail_trigger("default"))
+
+print(createNewEntity("abishkpatil", "GMAIL"))
