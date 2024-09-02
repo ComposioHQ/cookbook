@@ -3,7 +3,6 @@ from composio.client.exceptions import NoItemsFound
 from firebase.init import db
 import os
 
-
 def update_gmail_trigger_status(ent_id: str) -> bool:
     users_ref = db.collection('users')
     query = users_ref.where('username', '==', ent_id).limit(1)
