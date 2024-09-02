@@ -8,7 +8,7 @@
 [![Open in Replit](https://img.shields.io/badge/Open%20in-Replit-blue?logo=replit&style=for-the-badge)](https://replit.com/@abishkpatil/gmail-assistant-fb)
 
 ### Live Demo ([Live Link](https://gmail-assistant-six.vercel.app/))
-[![gmailgenius-demo](https://github.com/user-attachments/assets/abb24495-d242-42f3-8cff-599182f735f4)](https://drive.google.com/file/d/1aoKGYiq5QKr037Q5A9v58JERe0aGjXiC/preview)
+[![gmailgenius-demo](https://github.com/user-attachments/assets/abb24495-d242-42f3-8cff-599182f735f4)](https://drive.google.com/file/d/1_CWZ3yNK4pxe8Ey1bnQq4C6H_lEHDICb/preview)
 
 ## Description
 GmailGenius simplifies the process of finding relevant emails, downloading attachments, and extracting key data. Here's how it works:
