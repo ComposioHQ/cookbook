@@ -4,12 +4,10 @@ import { auth } from "./config/firebase";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
-// import Dashboard from "./pages/Dashboard";
 import ScrollToTop from "./components/ScrollToTop";
 import { useState, useEffect } from "react";
 import Login from "./pages/Login";
 import Settings from "./pages/Settings";
-import Agent from "./pages/Agent";
 import NotFound from "./pages/NotFound";
 import SkeletonLoader from "./components/SkeletonLoader";
 import { SnackbarProvider } from 'notistack'
