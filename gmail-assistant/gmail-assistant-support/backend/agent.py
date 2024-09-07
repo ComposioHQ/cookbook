@@ -28,22 +28,24 @@ listener = composio_toolset1.create_trigger_listener()
 def callback_new_message(event: TriggerEventData) -> None:
     print("Received new email")
     payload = event.payload
-    print("\n\npayload: ", payload)
+    sender_email = payload['sender']
+    sender_email = sender_email.strip()
 
-    # def get_user_by_username(username):
-    #     users_ref = db.collection('users')
-    #     query = users_ref.where('username', '==', username).limit(1)
-    #     docs = query.get()
+    def get_user_by_username(username):
+        users_ref = db.collection('users')
+        query = users_ref.where('username', '==', username).limit(1)
+        docs = query.get()
 
-    #     for doc in docs:
-    #         return doc.to_dict()
+        for doc in docs:
+            return doc.to_dict()
 
-    #     return False
+        return False
 
-    # user = get_user_by_username(event.metadata.connection.clientUniqueUserId)
-    # uid = user['uid']
-    # keyword_dict = user['emailForwarding']
-    
+    user = get_user_by_username(event.metadata.connection.clientUniqueUserId)
+    uid = user['uid']
+    keywords = user['keywords']
+    user_email = user['email']
+
     # Tools
     composio_toolset = ComposioToolSet(
         api_key=os.environ.get("COMPOSIO_API_KEY"),
@@ -62,23 +64,12 @@ def callback_new_message(event: TriggerEventData) -> None:
         allow_delegation=False,
     )
 
-    keyword_dict = {
-        "bugs, Issues, glitches, bad user experience": {
-            "email": "hrishikeshvastrad14@gmail.com",
-            "slack-channel": "dev-channel"
-        },
-        "Growth, Marketing, partnerships, suggestions, feedback": {
-            "email": "mskarthikugalawat@gmail.com",
-            "slack-channel": "growth-channel"
-        },
-    }
-
     process_new_email = Task(
         description=f"""
         1. Send an automatic reply to the sender of the email with the following message:
            "Thank you for your email. We have received it and will get back to you shortly. Our team is reviewing your message and will respond as soon as possible."
            using GMAIL_REPLY_TO_THREAD action.
-        2. Check if the email subject (subject) or body (messageText) in the payload contains any of the keywords specified in this dictionary: {keyword_dict}.
+        2. Check if the email subject (subject) or body (messageText) in the payload contains any of the keywords specified in this dictionary: {keywords}.
         3. If a keyword match is found:
            a. Check if the original email contains any attachments.
            b. If attachments are present, use the GMAIL_GET_ATTACHMENT action to download them.
@@ -97,7 +88,6 @@ def callback_new_message(event: TriggerEventData) -> None:
         process=Process.sequential,
     )
     result = email_processing_crew.kickoff()
-    # result = "test"
     return result
 
 
