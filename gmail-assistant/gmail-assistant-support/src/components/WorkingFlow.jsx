@@ -4,7 +4,7 @@ import NewMail from "./NewMail";
 import RedirectedTo from "./RedirectedTo";
 
 const WorkingFlow = () => {
-    return (<div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-8 bg-gray-100 rounded-xl shadow-inner">
+    return (<div className="max-w-6xl mx-auto py-8 bg-gray-100 rounded-xl shadow-inner">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-4">
             <NewMail />
             {/* Arrow and Brain Logo */}

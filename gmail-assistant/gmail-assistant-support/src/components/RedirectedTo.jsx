@@ -33,7 +33,7 @@ const RedirectedTo = () => {
                 </div>
                 <div className='flex flex-col gap-2 justify-center items-center'>
                     <img src={slackLogo} className="logo" alt="Slack logo" width={40} />
-                    <span className='text-sm text-gray-600 text-left'>@growth-Channel</span>
+                    <span className='text-sm text-gray-600 text-left'>@growth-channel</span>
                 </div>
             </div>
         </div>
