@@ -51,10 +51,25 @@ export const addUserData = async (uid, username, email) => {
             username: username,
             email: email,
             gmailAccountConnected: false,
-            sheetAccountConnected: false,
             gmailTriggerEnabled: false,
             slackChannelConnected: false,
-            keywords: [],
+            keywords: [
+                {
+                    keywords: "",
+                    email: "",
+                    slackChannel: ""
+                },
+                {
+                    keywords: "",
+                    email: "",
+                    slackChannel: ""
+                },
+                {
+                    keywords: "",
+                    email: "",
+                    slackChannel: ""
+                }
+            ]
         });
         console.log("Document written with id: ", docRef.id);
     } catch (e) {
