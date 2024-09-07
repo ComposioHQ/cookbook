@@ -5,27 +5,27 @@ const faqData = [
     {
         id: 1,
         question: "What is GmailGenius?",
-        answer: "GmailGenius is an AI agent that integrates with your Gmail and Google Sheets. It automatically processes new emails, evaluates their relevance to your needs, extracts important information, and stores it in your Google Sheets. This streamlines your email management and organizes valuable data without manual intervention."
+        answer: "GmailGenius is an AI-powered tool that supercharges your Gmail experience. It automatically scans new emails, instantly identifies important messages, and routes them to the right team members - all while you enjoy your coffee."
     },
     {
         id: 2,
-        question: "How do I get started with GmailGenius?",
-        answer: "To get started with GmailGenius, click on the 'Get Started' button on our website, link your Gmail and Google Sheets accounts, configure your agent according to your preferences & lastly activate your agent to start processing emails automatically."
+        question: "How does GmailGenius work?",
+        answer: "GmailGenius integrates with your Gmail account and uses AI to process incoming emails. It analyzes the content, recognizes important information, and automatically forwards relevant emails to the appropriate team or individual based on predefined rules and keywords."
     },
     {
         id: 3,
-        question: "What features does GmailGenius offer?",
-        answer: "GmailGenius offers features like keyword-based email searching, automatic attachment downloads, and the ability to store extracted data in an organized format, such as Excel sheets."
+        question: "What are the main benefits of using GmailGenius?",
+        answer: "GmailGenius offers several key benefits: it saves time by automating email sorting and routing, ensures important emails are never missed, improves team collaboration by directing emails to the right people, and allows you to focus on high-priority tasks instead of managing your inbox."
     },
     {
         id: 4,
-        question: "Is my data safe with GmailGenius?",
-        answer: "Yes, GmailGenius prioritizes user data security. We implement encryption and secure protocols to ensure your information is protected and remains private."
+        question: "How do I get started with GmailGenius?",
+        answer: "To get started with GmailGenius, simply click the 'Get Started' button on our website. Connecting your Gmail account & slack account, configure your team details and keywords. Within minutes, you'll be experiencing a more efficient email workflow."
     },
     {
         id: 5,
-        question: "Can I use GmailGenius on mobile devices?",
-        answer: "No, GmailGenius works best on desktop computers. While we're continuously improving our service, the full functionality and optimal user experience are currently available on desktop platforms."
+        question: "Is my data safe with GmailGenius?",
+        answer: "Absolutely. We take data security very seriously. GmailGenius uses industry-standard encryption and secure protocols to protect your information. We only access the email data necessary for routing and never store the content of your emails on our servers."
     }
 ];
 
