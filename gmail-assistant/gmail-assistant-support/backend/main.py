@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from firebase.init import auth
 from composio_config import createNewEntity, isEntityConnected, enable_gmail_trigger
 import logging
-from initialize_sheet_agent import createSheet
+from initialise_agent import initialise
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -48,6 +48,9 @@ class NewEntityData(BaseModel):
 class EnableTriggerData(BaseModel):
     username: str
 
+class InitialiseAgentData(BaseModel):
+    username: str
+
 @app.post("/newentity")
 async def handle_request(user_data: NewEntityData,
                          decoded_token: dict = Depends(verify_token)):
@@ -74,6 +77,14 @@ async def handle_request(user_data: UserData,
     appType = user_data.appType
     res = isEntityConnected(username, appType)
     return res
+
+@app.post("/initialiseagent")
+async def handle_request(user_data: InitialiseAgentData,
+                         decoded_token: dict = Depends(verify_token)):
+    username = user_data.username
+    res = initialise(username)
+    return res
+
 
 @app.get("/")
 async def handle_request():
