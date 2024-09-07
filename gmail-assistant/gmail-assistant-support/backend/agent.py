@@ -49,7 +49,7 @@ def callback_new_message(event: TriggerEventData) -> None:
         api_key=os.environ.get("COMPOSIO_API_KEY"),
         output_dir=Path.cwd() / "attachments",
         entity_id=event.metadata.connection.clientUniqueUserId)
-    tools = composio_toolset.get_actions(actions=[Action.GMAIL_SEND_EMAIL, Action.GMAIL_GET_ATTACHMENT, Action.GMAIL_REPLY_TO_THREAD])
+    tools = composio_toolset.get_actions(actions=[Action.GMAIL_SEND_EMAIL, Action.GMAIL_GET_ATTACHMENT, Action.GMAIL_REPLY_TO_THREAD, Action.SLACKBOT_SENDS_A_MESSAGE_TO_A_SLACK_CHANNEL])
 
     # Agent
     email_assistant = Agent(
@@ -63,8 +63,14 @@ def callback_new_message(event: TriggerEventData) -> None:
     )
 
     keyword_dict = {
-        "bugs, Issues, glitches, bad user experience": "hrishikeshvastrad14@gmail.com",
-        "Growth, Marketing, partnerships, suggestions, feedback": "mskarthikugalawat@gmail.com",
+        "bugs, Issues, glitches, bad user experience": {
+            "email": "hrishikeshvastrad14@gmail.com",
+            "slack-channel": "dev-channel"
+        },
+        "Growth, Marketing, partnerships, suggestions, feedback": {
+            "email": "mskarthikugalawat@gmail.com",
+            "slack-channel": "growth-channel"
+        },
     }
 
     process_new_email = Task(
@@ -76,12 +82,12 @@ def callback_new_message(event: TriggerEventData) -> None:
         3. If a keyword match is found:
            a. Check if the original email contains any attachments.
            b. If attachments are present, use the GMAIL_GET_ATTACHMENT action to download them.
-           c. Send the email payload to the corresponding email address. And if attachments are present include the downloaded attachments.
+           c. Send the email payload to the corresponding email address and slack channel. And if attachments are present include the downloaded attachments.
         4. Use the GMAIL_SEND_EMAIL action for sending the email (with attachments if applicable).
         Payload: {payload}
         """,
         agent=email_assistant,
-        expected_output="Summary of email processing, including confirmation of auto-reply sent, whether the email was forwarded based on keyword matching, and if any attachments were included in the forwarded email.",
+        expected_output="Summary of email processing, including confirmation of auto-reply sent, whether the email was forwarded & message sent to slack based on keyword matching, and if any attachments were included in the forwarded email.",
     )
 
     email_processing_crew = Crew(
