@@ -2,20 +2,20 @@ import BenefitCard from "./BenefitCard";
 
 const benefits = [
     {
-        "title": "Time-Saving",
-        "body": "Eliminate the need for manual email searching and attachment management, freeing up valuable time for other tasks"
+        "title": "Automated Email Processing",
+        "body": "GmailGenius automatically processes new emails, sending acknowledgments to senders and categorizing messages based on user-specified keywords"
     },
     {
-        "title": "Improved Productivity",
-        "body": "Focus on important projects while Attachments Extractor handles the data extraction process, boosting overall productivity"
+        "title": "Intelligent Routing",
+        "body": "Automatically directs emails to the right team (e.g., development for bugs, growth for collaborations) based on content analysis"
     },
     {
-        "title": "Enhanced Organization",
-        "body": "Keep valuable information neatly organized in a spreadsheet, making it easy to access and reference whenever needed"
+        "title": "Instant Team Notifications",
+        "body": "Sends relevant messages to appropriate Slack channels, ensuring quick team awareness and response"
     },
     {
-        "title": "Informed Decision Making",
-        "body": "Quickly access key data extracted from attachments to make well-informed decisions that drive success"
+        "title": "Time and Resource Optimization",
+        "body": "Eliminates manual email sorting and forwarding, allowing teams to focus on addressing important matters efficiently"
     }
 ]
 
