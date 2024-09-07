@@ -53,13 +53,8 @@ export const addUserData = async (uid, username, email) => {
             gmailAccountConnected: false,
             sheetAccountConnected: false,
             gmailTriggerEnabled: false,
-            sheetsConfig: {
-                spreadsheet_id: "",
-                sheetName: "Sheet1",
-                keywords: "",
-                attributes: "",
-                row: "2",
-            }
+            slackChannelConnected: false,
+            keywords: [],
         });
         console.log("Document written with id: ", docRef.id);
     } catch (e) {
@@ -67,7 +62,7 @@ export const addUserData = async (uid, username, email) => {
     }
 }
 
-export const updateUserKeywordsAndAttributes = async (uid, keywords, attributes, sheetTitle) => {
+export const addKeywords = async (uid, keywords) => {
     try {
         const usersRef = collection(db, "users");
         const q = query(usersRef, where("uid", "==", uid));
@@ -76,30 +71,15 @@ export const updateUserKeywordsAndAttributes = async (uid, keywords, attributes,
         if (!querySnapshot.empty) {
             const userDoc = querySnapshot.docs[0];
             await updateDoc(userDoc.ref, {
-                "sheetsConfig.keywords": keywords,
-                "sheetsConfig.attributes": attributes,
-                "sheetsConfig.sheetTitle": sheetTitle
+                "keywords": keywords,
             });
-            console.log("Keywords and attributes updated successfully");
+            console.log("Keywords added successfully");
         } else {
             console.log("User not found");
         }
     } catch (error) {
-        console.error("Error updating keywords and attributes:", error);
+        console.error("Error updating keywords:", error);
     }
-}
-
-export const getUserData = async () => {
-    const querySnapshot = await getDocs(collection(db, "users"));
-    const arr = [];
-    // return querySnapshot;
-    querySnapshot.forEach((doc) => {
-        arr.push({
-            firstName: doc.data().firstName,
-            lastName: doc.data().lastName
-        })
-    });
-    return arr;
 }
 
 export const getUserDetailsByUid = async (uid) => {
