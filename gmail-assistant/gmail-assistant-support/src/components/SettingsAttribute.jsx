@@ -12,9 +12,11 @@ const SettingsAttribute = ({ type, displayName, value, linkAction, loading, butt
             }}
         ></textarea> : <input
             id={type}
-            className="ml-auto focus:outline-none cursor-default block py-1.5 px-3 w-1/2 text-md text-gray-500 bg-gray-50 rounded-lg border border-gray-300 "
-            value={value}
-            readOnly
+            className="ml-auto focus:outline-none block py-1.5 px-3 w-1/2 text-md text-gray-500 bg-gray-50 rounded-lg border border-gray-300 "
+            placeholder={value}
+            onChange={(e) => {
+                onChangeFunction(e.target.value);
+            }}
         ></input>}
         {showButton && <SmallButton
             name={loading ? <Audio
