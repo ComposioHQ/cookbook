@@ -64,19 +64,32 @@ def callback_new_message(event: TriggerEventData) -> None:
         allow_delegation=False,
     )
 
-    process_new_email = Task(
-        description=f"""
+    prompt1 = f"""
         1. Send an automatic reply to the sender of the email with the following message:
-           "Thank you for your email. We have received it and will get back to you shortly. Our team is reviewing your message and will respond as soon as possible."
-           using GMAIL_REPLY_TO_THREAD action.
-        2. Check if the email subject (subject) or body (messageText) in the payload contains any of the keywords specified in this dictionary: {keywords}.
+            "Thank you for your email. We have received it and will get back to you shortly"
+            using GMAIL_REPLY_TO_THREAD action & if any attachments are present, use GMAIL_SEND_EMAIL send that too.
+        2. Check if the email subject (subject) or body (messageText) in the payload contains any of the keywords specified in this dictionary: {[{'slackChannel': 'dev-channel', 'email': 'hrishikeshvastrad14@gmail.com', 'keywords': 'bugs, errors, issues'}, {'slackChannel': 'growth-channel', 'email': 'mskarthikugalawat@gmail.com', 'keywords': 'Collaboration, partnership, sponser'}, {'slackChannel': 'hrishikesh-channel', 'email': 'hrishikesh@gmail.com', 'keywords': 'bill'}]}.
         3. If a keyword match is found:
-           a. Check if the original email contains any attachments.
-           b. If attachments are present, use the GMAIL_GET_ATTACHMENT action to download them.
-           c. Send the email payload to the corresponding email address and slack channel. And if attachments are present include the downloaded attachments.
-        4. Use the GMAIL_SEND_EMAIL action for sending the email (with attachments if applicable).
+            a. Check if the original email contains any attachments.
+            b. If attachments are present, use the GMAIL_GET_ATTACHMENT action to download them.
+            c. Send the email payload to the corresponding email address and slack channel. And if attachments are present include the downloaded attachments.
+            message: 'Forwarded email: subject & body'
         Payload: {payload}
-        """,
+        """
+    prompt2 = f"""
+        1. Check if the email subject (subject) or body (messageText) in the payload contains any of the keywords specified in this dictionary: {keywords}.
+        2. If a keyword match is found:
+            a. Check if the original email contains any attachments.
+            b. If attachments are present, use the GMAIL_GET_ATTACHMENT action to download them.
+            c. Send the email payload to the corresponding email address and slack channel. And if attachments are present include the downloaded attachments.
+            message: 'Forwarded email: subject & body'
+        Payload: {payload}
+        """
+
+    task_description = prompt1 if user_email != sender_email else prompt2
+
+    process_new_email = Task(
+        description=task_description,
         agent=email_assistant,
         expected_output="Summary of email processing, including confirmation of auto-reply sent, whether the email was forwarded & message sent to slack based on keyword matching, and if any attachments were included in the forwarded email.",
     )
