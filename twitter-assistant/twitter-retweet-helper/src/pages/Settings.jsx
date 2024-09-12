@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import SettingsAttribute from "../components/SettingsAttribute";
-import { auth, getUserDetailsByUid, getTriggerStatus } from "../config/firebase";
+import { auth, getUserDetailsByUid } from "../config/firebase";
 import axios from "axios";
-import { addKeywords } from '../config/firebase';
+import linkTwitterAccount from "../utils/composio/linkAccount";
 import SmallButton from "../components/SmallButton";
 import { Audio } from 'react-loader-spinner';
 import { useSnackbar } from 'notistack'
@@ -10,31 +10,27 @@ import { useSnackbar } from 'notistack'
 const Settings = ({ user }) => {
     const { enqueueSnackbar } = useSnackbar();
     const [username, setUsername] = useState("");
-    const [gmailAccount, setGmailAccount] = useState("No connected account");
-    const [slackAccount, setSlackAccount] = useState("No connected account");
-    const [enableTrigger, setEnableTrigger] = useState(false);
-    const [enableTriggerLoading, setEnableTriggerLoading] = useState(false);
-    const [gmailAccountLoading, setGmailAccountLoading] = useState(false);
-    const [slackAccountLoading, setSlackAccountLoading] = useState(false);
+    const [addingAgent, setAddingAgent] = useState(false);
+    const [twitterAccount, setTwitterAccount] = useState("No connected account");
+    const [twitterAccountLoading, setTwitterAccountLoading] = useState(false);
     const [userDetails, setUserDetails] = useState(null);
-    const [keywords, setKeywords] = useState([
+    const [authorisedUsers, setAuthorisedUsers] = useState([
         {
-            keywords: "",
-            email: "",
-            slackChannel: ""
+            name: "",
+            username: "",
+            profilePicUrl: ""
         },
         {
-            keywords: "",
-            email: "",
-            slackChannel: ""
+            name: "",
+            username: "",
+            profilePicUrl: ""
         },
         {
-            keywords: "",
-            email: "",
-            slackChannel: ""
+            name: "",
+            username: "",
+            profilePicUrl: ""
         }
     ]);
-    const [addingAgent, setAddingAgent] = useState(false);
 
     const fetchUserDetails = async () => {
         try {
@@ -112,72 +108,12 @@ const Settings = ({ user }) => {
             }
         };
 
-        const checkTriggerStatus = async () => {
-            const res = await getTriggerStatus(user.email.split("@")[0])
-            setEnableTrigger(res)
-        }
-
-        checkConnectionStatus("GMAIL", setGmailAccount);
-        checkConnectionStatus("SLACKBOT", setSlackAccount);
-        checkTriggerStatus();
+        checkConnectionStatus("TWITTER", setTwitterAccount);
         setUsername(user.email.split("@")[0]);
         initializeUserData();
     }, [user.email, user.uid]);
 
-    const enableTriggerFun = async () => {
-        try {
-            setEnableTriggerLoading(true);
-            const idToken = await auth.currentUser.getIdToken(true);
-            const data = {
-                username: user.email.split("@")[0],
-            };
-            const enableTriggerURL = import.meta.env.VITE_BACKEND_URL + "/enabletrigger"
-            const response = await axios.post(enableTriggerURL, data, {
-                headers: {
-                    'Authorization': `Bearer ${idToken}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            enqueueSnackbar("Trigger enabled", { variant: 'success' });
-        } catch (error) {
-            enqueueSnackbar("Error enabling trigger", { variant: 'error' });
-            console.error('Error enabling trigger:', error);
-        } finally {
-            setEnableTriggerLoading(false);
-        }
-    }
-
-    const linkAccount = async (appType) => {
-        const loadingStateSetter = appType === "GMAIL" ? setGmailAccountLoading : setSlackAccountLoading;
-        try {
-            loadingStateSetter(true);
-            const idToken = await auth.currentUser.getIdToken(true);
-            const data = {
-                username: user.email.split("@")[0],
-                appType: appType,
-                redirectUrl: window.location.href
-            };
-            const newEntityURL = import.meta.env.VITE_BACKEND_URL + "/newentity"
-            const response = await axios.post(newEntityURL, data, {
-                headers: {
-                    'Authorization': `Bearer ${idToken}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (response.data.authenticated === "yes") {
-                alert(response.data.message);
-            } else if (response.data.authenticated === "no") {
-                window.open(response.data.url, '_blank');
-            }
-        } catch (error) {
-            console.error('Error sending data:', error);
-        } finally {
-            loadingStateSetter(false);
-        }
-    }
-
-    const linkGmailAccount = () => linkAccount("GMAIL");
-    const linkSlackAccount = () => linkAccount("SLACKBOT");
+    linkTwitterAccount(setTwitterAccountLoading);
 
     const handleKeywordChange = (index, field, value) => {
         setKeywords(prevKeywords => {

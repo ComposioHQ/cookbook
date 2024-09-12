@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { signUpWithGoogle } from "../utils/authUtils";
+import { signUpWithGoogle } from "../utils/firebase/authUtils";
 import { auth } from "../config/firebase";
 import { useEffect, useState } from "react";
 

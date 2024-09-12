@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { signUpWithGoogle } from "../utils/authUtils";
+import { signUpWithGoogle } from "../utils/firebase/authUtils";
 
 const Login = () => {
     const navigate = useNavigate();
