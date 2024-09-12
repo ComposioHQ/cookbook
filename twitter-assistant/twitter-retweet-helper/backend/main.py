@@ -3,7 +3,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from firebase.init import auth
-from composio_config import createNewEntity, isEntityConnected, enable_gmail_trigger
+from composio_config import createNewEntity, isEntityConnected
 import logging
 from initialise_agent import initialise
 

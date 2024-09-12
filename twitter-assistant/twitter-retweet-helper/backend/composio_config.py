@@ -50,6 +50,3 @@ def createNewEntity(ent_id: str, appType: str, redirectUrl: str):
         #poll until the connection is active
         # connected_account = request.wait_until_active(client=toolset.client,timeout=100)
         return response
-
-
-print(createNewEntity("abhikal", "TWITTER", "https://app.composio.dev"))
