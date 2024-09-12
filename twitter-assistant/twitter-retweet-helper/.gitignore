@@ -8,11 +8,11 @@ pnpm-debug.log*
 lerna-debug.log*
 
 .env
-backend/firebase/support-bot-49f93-94ae307979d3.json
+backend/firebase/fb-auth-e06b5-0749e2fcbb63.json
 backend/attachments
 
 backend/__pycache__
-backend/genius-57d8d-firebase-adminsdk-ue7u9-90656332c6.json
+
 
 node_modules
 dist
