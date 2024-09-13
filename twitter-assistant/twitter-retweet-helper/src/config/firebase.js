@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, signOut } from "firebase/auth";
-import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, serverTimestamp } from "firebase/firestore";
 
 
 const firebaseConfig = {
@@ -50,26 +50,9 @@ export const addUserData = async (uid, username, email) => {
             uid: uid,
             username: username,
             email: email,
-            gmailAccountConnected: false,
-            gmailTriggerEnabled: false,
-            slackChannelConnected: false,
-            keywords: [
-                {
-                    keywords: "",
-                    email: "",
-                    slackChannel: ""
-                },
-                {
-                    keywords: "",
-                    email: "",
-                    slackChannel: ""
-                },
-                {
-                    keywords: "",
-                    email: "",
-                    slackChannel: ""
-                }
-            ]
+            twitterAccountConnected: false,
+            authorisedUsers: [],
+            timeOfCreation: serverTimestamp()
         });
         console.log("Document written with id: ", docRef.id);
     } catch (e) {
