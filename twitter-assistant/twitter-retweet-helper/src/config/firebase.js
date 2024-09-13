@@ -60,23 +60,26 @@ export const addUserData = async (uid, username, email) => {
     }
 }
 
-export const addKeywords = async (uid, keywords) => {
+export const addUserToAuthorisedUsers = async (uid, newUser) => {
     try {
         const usersRef = collection(db, "users");
         const q = query(usersRef, where("uid", "==", uid));
         const querySnapshot = await getDocs(q);
-
         if (!querySnapshot.empty) {
             const userDoc = querySnapshot.docs[0];
+            const userData = userDoc.data();
+            const authorisedUser = {description: newUser.data.description, id: newUser.data.id, name: newUser.data.name, profile_image_url: newUser.data.profile_image_url, username: newUser.data.username}
+            const updatedAuthorisedUsers = [...userData.authorisedUsers, authorisedUser];
             await updateDoc(userDoc.ref, {
-                "keywords": keywords,
+                authorisedUsers: updatedAuthorisedUsers
             });
-            console.log("Keywords added successfully");
+            console.log("Authorised user added successfully");
         } else {
-            console.log("User not found");
+            console.log("User document not found");
         }
     } catch (error) {
-        console.error("Error updating keywords:", error);
+        console.error("Error adding user to authorised user", error);
+        return error;
     }
 }
 
@@ -95,26 +98,6 @@ export const getUserDetailsByUid = async (uid) => {
         }
     } catch (error) {
         console.error("Error getting user details:", error);
-        return null;
-    }
-}
-
-export const getTriggerStatus = async (username) => {
-    try {
-        const usersRef = collection(db, "users");
-        const q = query(usersRef, where("username", "==", username));
-        const querySnapshot = await getDocs(q);
-
-        if (!querySnapshot.empty) {
-            const userDoc = querySnapshot.docs[0];
-            const triggerStatus = userDoc.data().gmailTriggerEnabled;
-            return triggerStatus;
-        } else {
-            console.log("User does not exist.");
-            return null;
-        }
-    } catch (error) {
-        console.error("Error getting trigger status:", error);
         return null;
     }
 }
