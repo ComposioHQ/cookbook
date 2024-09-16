@@ -10,6 +10,7 @@ lerna-debug.log*
 .env
 backend/firebase/fb-auth-e06b5-0749e2fcbb63.json
 backend/attachments
+backend/firebase/__pycache__
 
 backend/__pycache__
 
