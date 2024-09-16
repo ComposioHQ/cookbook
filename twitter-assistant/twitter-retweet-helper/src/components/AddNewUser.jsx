@@ -1,4 +1,3 @@
-import { addUserToAuthorisedUsers } from "../config/firebase";
 import getUserDataByUsername from "../utils/twitter_utils";
 import { useSnackbar } from "notistack";
 import { Audio } from "react-loader-spinner";
@@ -6,15 +5,42 @@ import SmallButton from "./SmallButton";
 import Separator from "./Separator";
 import { useState } from "react";
 import AddedUsers from "./AddedUsers";
+import { auth, getUserDetailsByUid, addUserToAuthorisedUsers } from "../config/firebase";
+import { useEffect } from "react";
+import { linkTwitterAccount } from "../utils/composio_utils";
 
-const AddNewUser = ({ authorisedUsers, setAuthorisedUsers, user }) => {
+const AddNewUser = ({ user }) => {
     const [newUser, setNewUser] = useState("");
     const [addingUser, setAddingUser] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
 
+    const [userDetails, setUserDetails] = useState(null);
+    const [authorisedUsers, setAuthorisedUsers] = useState([]);
+
+    const fetchUserDetails = async () => {
+        try {
+            const details = await getUserDetailsByUid(user.uid);
+            setUserDetails(details);
+            return details;
+        } catch (error) {
+            console.error("Error fetching user details:", error);
+        }
+    };
+
+    useEffect(() => {
+        const initializeAuthorisedUsersData = async () => {
+            if (!userDetails) {
+                const details = await fetchUserDetails();
+                if (details && details.authorisedUsers) {
+                    setAuthorisedUsers(details.authorisedUsers);
+                }
+            }
+        };
+        initializeAuthorisedUsersData();
+    }, [userDetails])
+
     const fetchTwitterUserData = async (username) => {
         try {
-            console.log("username: ", newUser);
             return await getUserDataByUsername(username);
         } catch (error) {
             console.error('Error fetching user data:', error);
@@ -51,9 +77,10 @@ const AddNewUser = ({ authorisedUsers, setAuthorisedUsers, user }) => {
             return;
         }
         //add feat to link twitter account here by passing the username, store the url
+        let url = await linkTwitterAccount(newUser);
         try {
-            await addUserToAuthorisedUsers(user.uid, userData);
-            setAuthorisedUsers([...authorisedUsers, userData]);
+            await addUserToAuthorisedUsers(user.uid, userData, url);
+            setAuthorisedUsers([...authorisedUsers, {description: userData.data.description, id: userData.data.id, name: userData.data.name, profile_image_url: userData.data.profile_image_url, username: userData.data.username, isConnected: false, authUrl: url}]);
             enqueueSnackbar('User added successfully.', { variant: 'success' });
         } catch (error) {
             console.error('Error:', error);
@@ -71,11 +98,11 @@ const AddNewUser = ({ authorisedUsers, setAuthorisedUsers, user }) => {
             <SmallButton
                 type="submit"
                 width="14rem"
-                name={addingUser ? <Audio height="15"  color="white" ariaLabel="loading" /> : "Add User"}
+                name={addingUser ? <Audio height="15" color="white" ariaLabel="loading" /> : "Add User"}
             />
         </form>
         <br />
-        <AddedUsers authorisedUsers={authorisedUsers} />
+        <AddedUsers authorisedUsers={authorisedUsers} adminId={user.uid}/>
     </>
 }
 
