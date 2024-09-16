@@ -16,8 +16,8 @@ const Settings = ({ user }) => {
         setUsername(user.email.split("@")[0]);
     }, [user.uid, checkConnectionStatus]);
 
-    const handleLinkTwitterAccount = () => {
-        linkTwitterAccount(setTwitterAccountLoading, user.email.split("@")[0]);
+    const handleLinkTwitterAccount = async () => {
+        await linkTwitterAccount(user.email.split("@")[0], setTwitterAccountLoading);
     }
 
     return <div className="flex flex-1 flex-col gap-6 min-h-screen py-8 px-4 mx-auto mt-10 max-w-screen-md text-center lg:py-16 lg:px-12">
