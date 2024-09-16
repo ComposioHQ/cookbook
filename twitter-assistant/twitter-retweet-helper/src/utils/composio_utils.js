@@ -20,6 +20,9 @@ const linkTwitterAccount = async (user, setTwitterAccountLoading = null) => {
         if (response.data.authenticated === "yes") {
             alert(response.data.message);
         } else if (response.data.authenticated === "no") {
+            if (!setTwitterAccountLoading) {
+                return response.data.url;
+            }
             window.open(response.data.url, '_blank');
         }
     } catch (error) {
