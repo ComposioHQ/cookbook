@@ -11,6 +11,7 @@ import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import SkeletonLoader from "./components/SkeletonLoader";
 import { SnackbarProvider } from 'notistack'
+import CreatePost from "./pages/CreatePost";
 
 const ProtectedRoute = ({ user, children }) => {
   if (!user) {
@@ -46,6 +47,11 @@ const App = () => {
           <Route path="/Settings" element={
             <ProtectedRoute user={user}>
               <Settings user={user} />
+            </ProtectedRoute>
+          } />
+          <Route path="/createpost" element={
+            <ProtectedRoute user={user}>
+              <CreatePost user={user} />
             </ProtectedRoute>
           } />
           <Route path="/" element={<Home />} />
