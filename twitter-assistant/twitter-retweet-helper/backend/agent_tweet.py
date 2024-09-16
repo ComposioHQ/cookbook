@@ -50,6 +50,6 @@ def post_twitter_message(message: str) -> str:
     result = twitter_processing_crew.kickoff()
     return result
 
-post_twitter_message("Hello, this is a test tweet from your AI assistant!")
+post_twitter_message("We will win this")
 
 # 1833201520021803153
