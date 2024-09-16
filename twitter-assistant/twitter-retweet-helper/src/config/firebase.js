@@ -60,7 +60,7 @@ export const addUserData = async (uid, username, email) => {
     }
 }
 
-export const addUserToAuthorisedUsers = async (uid, newUser) => {
+export const addUserToAuthorisedUsers = async (uid, newUser, authUrl) => {
     try {
         const usersRef = collection(db, "users");
         const q = query(usersRef, where("uid", "==", uid));
@@ -68,7 +68,7 @@ export const addUserToAuthorisedUsers = async (uid, newUser) => {
         if (!querySnapshot.empty) {
             const userDoc = querySnapshot.docs[0];
             const userData = userDoc.data();
-            const authorisedUser = {description: newUser.data.description, id: newUser.data.id, name: newUser.data.name, profile_image_url: newUser.data.profile_image_url, username: newUser.data.username}
+            const authorisedUser = { description: newUser.data.description, id: newUser.data.id, name: newUser.data.name, profile_image_url: newUser.data.profile_image_url, username: newUser.data.username, isConnected: false, authUrl: authUrl }
             const updatedAuthorisedUsers = [...userData.authorisedUsers, authorisedUser];
             await updateDoc(userDoc.ref, {
                 authorisedUsers: updatedAuthorisedUsers
@@ -79,6 +79,33 @@ export const addUserToAuthorisedUsers = async (uid, newUser) => {
         }
     } catch (error) {
         console.error("Error adding user to authorised user", error);
+        return error;
+    }
+}
+
+export const updateAuthorisedUserConnectionStatus = async (uid, username) => {
+    try {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("uid", "==", uid));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            const userData = userDoc.data();
+            const existingUserIndex = userData.authorisedUsers.findIndex(user => user.username === username);
+
+            if (existingUserIndex !== -1) {
+                // Update existing user's isConnected status
+                userData.authorisedUsers[existingUserIndex].isConnected = true;
+            }
+            await updateDoc(userDoc.ref, {
+                authorisedUsers: userData.authorisedUsers
+            });
+            console.log("Authorization status updated successfully");
+        } else {
+            console.log("User document not found");
+        }
+    } catch (error) {
+        console.error("Error updating authorization status of user", error);
         return error;
     }
 }
