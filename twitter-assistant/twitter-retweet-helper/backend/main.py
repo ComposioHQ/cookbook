@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 
 origins = [
+    "http://localhost:5173",
     "https://gmail-assistant-six.vercel.app",
     "http://localhost",
     "http://localhost:5173",
