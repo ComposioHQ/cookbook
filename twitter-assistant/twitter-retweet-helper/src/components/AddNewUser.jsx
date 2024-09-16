@@ -1,11 +1,11 @@
 import { addUserToAuthorisedUsers } from "../config/firebase";
-import getUserDataByUsername from "../utils/twitter/getData";
+import getUserDataByUsername from "../utils/twitter_utils";
 import { useSnackbar } from "notistack";
 import { Audio } from "react-loader-spinner";
 import SmallButton from "./SmallButton";
 import Separator from "./Separator";
 import { useState } from "react";
-
+import AddedUsers from "./AddedUsers";
 
 const AddNewUser = ({ authorisedUsers, setAuthorisedUsers, user }) => {
     const [newUser, setNewUser] = useState("");
@@ -50,6 +50,7 @@ const AddNewUser = ({ authorisedUsers, setAuthorisedUsers, user }) => {
         if (!userData) {
             return;
         }
+        //add feat to link twitter account here by passing the username, store the url
         try {
             await addUserToAuthorisedUsers(user.uid, userData);
             setAuthorisedUsers([...authorisedUsers, userData]);
@@ -70,23 +71,11 @@ const AddNewUser = ({ authorisedUsers, setAuthorisedUsers, user }) => {
             <SmallButton
                 type="submit"
                 width="14rem"
-                name={addingUser ? <Audio height="15" width="200" color="white" ariaLabel="loading" /> : "Add User"}
+                name={addingUser ? <Audio height="15"  color="white" ariaLabel="loading" /> : "Add User"}
             />
         </form>
         <br />
-        <Separator title="Authorised Users" />
-        <div className="flex flex-wrap justify-center gap-2">
-            {authorisedUsers.length > 0 ? (
-                authorisedUsers.map((user, index) => (
-                    <div key={index} className="bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
-                        {/* {user.description} | {user.id} | {user.name} | {user.profile_image_url} | {user.username} */}
-                        {user.username}
-                    </div>
-                ))
-            ) : (
-                <p className="text-gray-500">No authorised users added yet.</p>
-            )}
-        </div>
+        <AddedUsers authorisedUsers={authorisedUsers} />
     </>
 }
 
