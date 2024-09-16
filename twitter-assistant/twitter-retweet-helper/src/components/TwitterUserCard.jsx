@@ -2,11 +2,10 @@ import { BsCheckCircle } from "react-icons/bs";
 import SmallButton from "./SmallButton";
 import { Audio } from 'react-loader-spinner';
 import { useState } from "react";
+import Clipboard from "./Clipboard";
 
-const TwitterUserCard = ({ user, action, connected }) => {
-    const { authenticated } = user;
-    const [loading, setLoading] = useState(false);
-    return <div className="border border-gray-200 rounded-md bg-white px-16 py-5 max-w-3xl mx-10 gap-10">
+const TwitterUserCard = ({ user, action, connected, authUrl }) => {
+    return <div className="border border-gray-200 rounded-md bg-white px-16 py-5 max-w-3xl gap-4 mx-8">
         <div className="flex flex-wrap items-center justify-between">
             <div>
                 <div className="flex items-center">
@@ -26,16 +25,7 @@ const TwitterUserCard = ({ user, action, connected }) => {
                     <BsCheckCircle />
                 </div>
                 :
-                <SmallButton width="8rem" name={loading ?
-                    <Audio height="15" width="70"
-                        radius="20"
-                        color="white"
-                        ariaLabel="loading"
-                        wrapperStyle
-                        wrapperClass
-                    /> : "Authenticate"}
-                    action={action}
-                />
+                <Clipboard authUrl={authUrl} />
             }
         </div>
     </div>
