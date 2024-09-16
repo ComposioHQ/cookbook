@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import SettingsAttribute from "../components/SettingsAttribute";
 import { auth, getUserDetailsByUid, addUserToAuthorisedUsers } from "../config/firebase";
 import axios from "axios";
-import linkTwitterAccount from "../utils/composio/linkAccount";
+import { checkConnectionStatus, linkTwitterAccount } from "../utils/composio_utils";
 import { useSnackbar } from 'notistack'
 import Separator from "../components/Separator";
 import AddNewUser from "../components/AddNewUser";
@@ -25,28 +25,6 @@ const Settings = ({ user }) => {
         }
     };
 
-    const checkConnectionStatus = useCallback(async (appType, setAccountStatus) => {
-        try {
-            const idToken = await auth.currentUser.getIdToken(true);
-            const data = {
-                username: user.email.split("@")[0],
-                appType: appType
-            };
-            const checkconnectionURL = import.meta.env.VITE_BACKEND_URL + "/checkconnection"
-            const response = await axios.post(checkconnectionURL, data, {
-                headers: {
-                    'Authorization': `Bearer ${idToken}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (response.data.authenticated === "yes") {
-                setAccountStatus("Connected");
-            }
-        } catch (error) {
-            console.error(`Error checking ${appType} connection status:`, error);
-        }
-    }, [user.email]);
-
     useEffect(() => {
         const initializeAuthorisedUsersData = async () => {
             const details = await fetchUserDetails();
@@ -54,15 +32,14 @@ const Settings = ({ user }) => {
                 setAuthorisedUsers(details.authorisedUsers);
             }
         };
-
-        checkConnectionStatus("TWITTER", setTwitterAccount);
+        checkConnectionStatus("TWITTER", setTwitterAccount, user.email.split("@")[0]);
         setUsername(user.email.split("@")[0]);
         initializeAuthorisedUsersData();
-    }, [user.email, user.uid, checkConnectionStatus]);
+    }, [user.uid, checkConnectionStatus]);
 
-    const handleLinkTwitterAccount = useCallback(() => {
-        linkTwitterAccount(setTwitterAccountLoading, user);
-    }, [user]);
+    const handleLinkTwitterAccount = () => {
+        linkTwitterAccount(setTwitterAccountLoading, user.email.split("@")[0]);
+    }
 
     return <div className="flex flex-1 flex-col gap-6 min-h-screen py-8 px-4 mx-auto mt-10 max-w-screen-md text-center lg:py-16 lg:px-12">
         <Separator title="Connect Accounts" />
