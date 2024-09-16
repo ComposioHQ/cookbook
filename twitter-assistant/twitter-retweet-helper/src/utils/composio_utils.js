@@ -1,9 +1,9 @@
 import { auth } from "../config/firebase";
 import axios from "axios";
 
-const linkTwitterAccount = async (setTwitterAccountLoading, user) => {
+const linkTwitterAccount = async (user, setTwitterAccountLoading = null) => {
     try {
-        setTwitterAccountLoading(true);
+        if (setTwitterAccountLoading) setTwitterAccountLoading(true);
         const idToken = await auth.currentUser.getIdToken(true);
         const data = {
             username: user,
@@ -25,7 +25,7 @@ const linkTwitterAccount = async (setTwitterAccountLoading, user) => {
     } catch (error) {
         console.error('Error sending data:', error);
     } finally {
-        setTwitterAccountLoading(false);
+        if (setTwitterAccountLoading) setTwitterAccountLoading(false);
     }
 }
 
@@ -46,6 +46,7 @@ const checkConnectionStatus = async (appType, setAccountStatus, entityId) => {
         if (response.data.authenticated === "yes") {
             setAccountStatus("Connected");
         }
+        return response.data.authenticated;
     } catch (error) {
         console.error(`Error checking ${appType} connection status:`, error);
     }
