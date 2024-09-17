@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from firebase.init import auth
 from composio_config import createNewEntity, isEntityConnected
 import logging
-from initialise_agent import initialise
+from quote_generator import generate_repost_quote
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -52,6 +52,10 @@ class EnableTriggerData(BaseModel):
 class InitialiseAgentData(BaseModel):
     username: str
 
+class TweetData(BaseModel):
+    tweetContent: str
+    numberOfQuotes: int
+
 @app.post("/newentity")
 async def handle_request(user_data: NewEntityData,
                          decoded_token: dict = Depends(verify_token)):
@@ -85,6 +89,15 @@ async def handle_request(user_data: InitialiseAgentData,
     username = user_data.username
     res = initialise(username)
     return res
+
+@app.post("/getquotes")
+async def handle_request(tweet_data: TweetData,
+                         decoded_token: dict = Depends(verify_token)):
+    user_id = decoded_token['uid']
+    tweet_content = tweet_data.tweetContent
+    number_of_quotes = tweet_data.numberOfQuotes
+    res = generate_repost_quote(tweet_content, number_of_quotes)
+    return {"quotes": res}
 
 
 @app.get("/")
