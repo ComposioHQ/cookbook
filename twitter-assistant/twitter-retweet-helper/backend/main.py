@@ -6,6 +6,7 @@ from firebase.init import auth
 from composio_config import createNewEntity, isEntityConnected
 import logging
 from quote_generator import generate_repost_quote
+from TweetAndRepost import tweet
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -56,6 +57,11 @@ class TweetData(BaseModel):
     tweetContent: str
     numberOfQuotes: int
 
+class TweetRequestData(BaseModel):
+    initial_tweet_entity_id: str
+    post: str
+    repost_data_list: list
+
 @app.post("/newentity")
 async def handle_request(user_data: NewEntityData,
                          decoded_token: dict = Depends(verify_token)):
@@ -99,6 +105,14 @@ async def handle_request(tweet_data: TweetData,
     res = generate_repost_quote(tweet_content, number_of_quotes)
     return {"quotes": res}
 
+@app.post("/tweet")
+async def handle_request(tweet_request_data: TweetRequestData,
+                         decoded_token: dict = Depends(verify_token)):
+    initial_tweet_entity_id = tweet_request_data.initial_tweet_entity_id
+    initial_tweet = tweet_request_data.post
+    repost_data_list = tweet_request_data.repost_data_list
+    res = tweet(initial_tweet_entity_id, initial_tweet, repost_data_list)
+    return {"result": res}
 
 @app.get("/")
 async def handle_request():
