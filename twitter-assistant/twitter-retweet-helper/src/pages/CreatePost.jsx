@@ -39,6 +39,23 @@ const CreatePost = ({ user }) => {
         }
         try {
             setPosting(true);
+            const idToken = await auth.currentUser.getIdToken(true);
+            const tweetURL = import.meta.env.VITE_BACKEND_URL + "/tweet";
+            const repostDataList = authorisedUsers.map(user => ({
+                entity_id: user.username,
+                quote: user.quote
+            }));
+            const response = await axios.post(tweetURL, {
+                initial_tweet_entity_id: user.email.split("@")[0],
+                post: post,
+                repost_data_list: repostDataList
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            enqueueSnackbar('Post created successfully', { variant: 'success' });
         } catch (error) {
             console.error("Error creating post:", error);
             enqueueSnackbar('Failed to create post', { variant: 'error' });
