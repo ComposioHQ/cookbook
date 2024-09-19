@@ -1,17 +1,16 @@
 import { auth } from "../config/firebase";
 import axios from "axios";
 
-const linkTwitterAccount = async (user, setTwitterAccountLoading = null) => {
+const initiateTwitterConnectionAndConnectAdmin = async (user, setTwitterAccountLoading = null) => {
     try {
         if (setTwitterAccountLoading) setTwitterAccountLoading(true);
         const idToken = await auth.currentUser.getIdToken(true);
         const data = {
             username: user,
-            appType: 'TWITTER',
             redirectUrl: window.location.href
         };
-        const newEntityURL = import.meta.env.VITE_BACKEND_URL + "/newentity"
-        const response = await axios.post(newEntityURL, data, {
+        const newIntegrationURL = import.meta.env.VITE_BACKEND_URL + "/newintegration"
+        const response = await axios.post(newIntegrationURL, data, {
             headers: {
                 'Authorization': `Bearer ${idToken}`,
                 'Content-Type': 'application/json'
@@ -29,6 +28,31 @@ const linkTwitterAccount = async (user, setTwitterAccountLoading = null) => {
         console.error('Error sending data:', error);
     } finally {
         if (setTwitterAccountLoading) setTwitterAccountLoading(false);
+    }
+}
+
+const linkTwitterAccount = async (admin, user) => {
+    try {
+        const idToken = await auth.currentUser.getIdToken(true);
+        const data = {
+            username: admin,
+            newUserId: user,
+            redirectUrl: window.location.href
+        };
+        const newEntityURL = import.meta.env.VITE_BACKEND_URL + "/newentity"
+        const response = await axios.post(newEntityURL, data, {
+            headers: {
+                'Authorization': `Bearer ${idToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.data.authenticated === "yes") {
+            alert(response.data.message);
+        } else if (response.data.authenticated === "no") {
+            return response.data.url;
+        }
+    } catch (error) {
+        console.error('Error sending data:', error);
     }
 }
 
@@ -55,4 +79,4 @@ const checkConnectionStatus = async (appType, setAccountStatus, entityId) => {
     }
 }
 
-export { checkConnectionStatus, linkTwitterAccount };
+export { checkConnectionStatus, linkTwitterAccount, initiateTwitterConnectionAndConnectAdmin };
