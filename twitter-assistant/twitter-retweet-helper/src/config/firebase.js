@@ -82,6 +82,25 @@ export const updateComposioApiKey = async (uid, newApiKey) => {
     }
 }
 
+export const getComposioApiKey = async (uid) => {
+    try {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("uid", "==", uid));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            const userData = userDoc.data();
+            return userData.composio_api_key;
+        } else {
+            console.log("User document not found");
+            return null;
+        }
+    } catch (error) {
+        console.error("Error retrieving Composio API key", error);
+        return null;
+    }
+}
+
 export const addUserToAuthorisedUsers = async (uid, newUser, authUrl) => {
     try {
         const usersRef = collection(db, "users");
