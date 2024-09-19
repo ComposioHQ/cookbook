@@ -22,17 +22,6 @@ creds = {
 firebase_admin.initialize_app(credentials.Certificate(creds))
 db = firestore.client()
 
-# def get_user_by_username(username):
-#     users_ref = db.collection('users')
-#     query = users_ref.where('username', '==', username).limit(1)
-#     docs = query.get()
-
-#     for doc in docs:
-#         return doc.to_dict()
-
-#     return False
-
-
 def get_user_by_username(username):
     users_ref = db.collection('users')
     query = users_ref.where('uid', '==', username).limit(1)
@@ -43,25 +32,7 @@ def get_user_by_username(username):
 
     return False
 
-
-def update_row(uid, new_row):
-    users_ref = db.collection('users')
-    query = users_ref.where('uid', '==', uid).limit(1)
-    docs = query.get()
-
-    for doc in docs:
-        try:
-            doc.reference.update({'sheetsConfig.row': str(new_row)})
-            return True
-        except Exception as e:
-            print(f"Error updating user row: {e}")
-            return False
-
-    print(f"User with uid {uid} not found")
-    return False
-
-
-def update_spreadsheet_id(username: str, spreadsheet_id: str):
+def update_twitter_integration_id(username: str, twitter_integration_id: str):
     users_ref = db.collection('users')
     query = users_ref.where('username', '==', username).limit(1)
     docs = query.get()
@@ -69,12 +40,24 @@ def update_spreadsheet_id(username: str, spreadsheet_id: str):
     for doc in docs:
         try:
             doc.reference.update(
-                {'sheetsConfig.spreadsheet_id': spreadsheet_id})
-            print(f"Successfully updated spreadsheet_id for user {username}")
+                {'twitterIntegrationId': twitter_integration_id})
+            print(f"Successfully updated twitterIntegrationId for user {uid}")
             return True
         except Exception as e:
-            print(f"Error updating spreadsheet_id for user {username}: {e}")
+            print(f"Error updating twitterIntegrationId for user {uid}: {e}")
             return False
 
-    print(f"User {username} not found")
+    print(f"User {uid} not found")
     return False
+
+def get_composio_api_key(username: str) -> str:
+    users_ref = db.collection('users')
+    query = users_ref.where('username', '==', username).limit(1)
+    docs = query.get()
+
+    for doc in docs:
+        user_data = doc.to_dict()
+        return user_data.get('composio_api_key', '')
+
+    print(f"User {username} not found")
+    return ''
