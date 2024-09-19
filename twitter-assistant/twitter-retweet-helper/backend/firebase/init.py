@@ -41,14 +41,27 @@ def update_twitter_integration_id(username: str, twitter_integration_id: str):
         try:
             doc.reference.update(
                 {'twitterIntegrationId': twitter_integration_id})
-            print(f"Successfully updated twitterIntegrationId for user {uid}")
+            print(f"Successfully updated twitterIntegrationId for user {username}")
             return True
         except Exception as e:
-            print(f"Error updating twitterIntegrationId for user {uid}: {e}")
+            print(f"Error updating twitterIntegrationId for user {username}: {e}")
             return False
 
-    print(f"User {uid} not found")
+    print(f"User {username} not found")
     return False
+
+def get_twitter_integration_id(username: str) -> str:
+    users_ref = db.collection('users')
+    query = users_ref.where('username', '==', username).limit(1)
+    docs = query.get()
+
+    for doc in docs:
+        user_data = doc.to_dict()
+        return user_data.get('twitterIntegrationId', '')
+
+    print(f"User {username} not found")
+    return ''
+
 
 def get_composio_api_key(username: str) -> str:
     users_ref = db.collection('users')
