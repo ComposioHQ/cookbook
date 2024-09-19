@@ -3,7 +3,7 @@ from composio.client.exceptions import NoItemsFound
 import os
 from dotenv import load_dotenv
 load_dotenv()
-from firebase.init import update_twitter_integration_id, get_composio_api_key
+from firebase.init import update_twitter_integration_id, get_composio_api_key, get_twitter_integration_id
 
 def isEntityConnected(ent_id: str, appType: str):
     toolset = ComposioToolSet(api_key=get_composio_api_key(ent_id),
@@ -40,17 +40,16 @@ def createTwitterIntegrationAndInitiateAdminConnection(ent_id: str, redirectUrl:
     return response
 
 
-def createNewEntity(ent_id: str, appType: str, redirectUrl: str):
+def createNewEntity(ent_id: str, newUserId: str, redirectUrl: str):
     toolset = ComposioToolSet(api_key=get_composio_api_key(ent_id),
-                              entity_id=ent_id)
+                              entity_id=newUserId)
     entity = toolset.get_entity()
-    app_enum = getattr(App, appType)
     try:
-        entity.get_connection(app=app_enum)
+        entity.get_connection(app="TWITTER")
         response = {
             "authenticated": "yes",
             "message":
-            f"User {ent_id} is already authenticated with {appType}",
+            f"User {newUserId} is already authenticated with TWITTER",
             "url": ""
         }
         return response
@@ -62,7 +61,7 @@ def createNewEntity(ent_id: str, appType: str, redirectUrl: str):
         )
         response = {
             "authenticated": "no",
-            "message": f"User {ent_id} is not yet authenticated with {appType}. Please authenticate.",
+            "message": f"User {newUserId} is not yet authenticated with TWITTER. Please authenticate.",
             "url": request.redirectUrl
         }
         return response
