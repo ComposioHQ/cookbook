@@ -1,6 +1,6 @@
 import SmallButton from "./SmallButton";
 import { Audio } from 'react-loader-spinner'
-const SettingsAttribute = ({ type, displayName, value, linkAction, loading, buttonName="Link", showButton=true, textArea=false, onChangeFunction }) => {
+const SettingsAttribute = ({ type, displayName, value, linkAction, loading, buttonName="Link", showButton=true, textArea=false, onChangeFunction, readOnly=true }) => {
     return <div className="flex items-center gap-4">
         <label htmlFor={type} className="text-left block text-lg font-medium text-gray-900 dark:text-white">{displayName}: </label>
         {textArea ? <textarea
@@ -11,7 +11,7 @@ const SettingsAttribute = ({ type, displayName, value, linkAction, loading, butt
                 onChangeFunction(e.target.value);
             }}
         ></textarea> : <input
-            readOnly
+            readOnly={readOnly}
             id={type}
             className="cursor-default h-[2.5rem] block w-1/2 ml-auto rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 py-1.5 px-3 focus:outline-none"
             placeholder={value}
