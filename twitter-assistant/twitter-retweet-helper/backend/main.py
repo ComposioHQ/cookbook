@@ -7,6 +7,7 @@ from composio_config import createNewEntity, isEntityConnected, createTwitterInt
 import logging
 from quote_generator import generate_repost_quote
 from TweetAndRepost import tweet
+from twitter_functions import get_tweet_text_by_id
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -51,6 +52,9 @@ class InitialiseAgentData(BaseModel):
 class TweetData(BaseModel):
     tweetContent: str
     numberOfQuotes: int
+
+class GetTweetData(BaseModel):
+    tweet_id: str
 
 class TweetRequestData(BaseModel):
     initial_tweet_entity_id: str
@@ -126,6 +130,12 @@ async def handle_request(tweet_request_data: TweetRequestData,
     repost_data_list = tweet_request_data.repost_data_list
     res = tweet(initial_tweet_entity_id, initial_tweet, repost_data_list)
     return {"result": res}
+
+@app.post("/gettweet")
+async def handle_request(tweet_data: GetTweetData, decoded_token: dict = Depends(verify_token)):
+    tweet_id = tweet_data.tweet_id
+    tweet_text = get_tweet_text_by_id(tweet_id)
+    return {"tweet_text": tweet_text}
 
 @app.get("/")
 async def handle_request():
