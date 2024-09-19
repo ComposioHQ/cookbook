@@ -52,11 +52,33 @@ export const addUserData = async (uid, username, email) => {
             email: email,
             twitterAccountConnected: false,
             authorisedUsers: [],
+            twitterIntegrationId: "",
+            composio_api_key: "",
             timeOfCreation: serverTimestamp()
         });
         console.log("Document written with id: ", docRef.id);
     } catch (e) {
         console.error("Error adding document: ", e);
+    }
+}
+
+export const updateComposioApiKey = async (uid, newApiKey) => {
+    try {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("uid", "==", uid));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            await updateDoc(userDoc.ref, {
+                composio_api_key: newApiKey
+            });
+            console.log("Composio API key updated successfully");
+        } else {
+            console.log("User document not found");
+        }
+    } catch (error) {
+        console.error("Error updating Composio API key", error);
+        return error;
     }
 }
 
