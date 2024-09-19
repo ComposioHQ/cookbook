@@ -77,8 +77,8 @@ const AddNewUser = ({ user }) => {
             return;
         }
         //add feat to link twitter account here by passing the username, store the url
-        let url = await linkTwitterAccount(newUser);
         try {
+            let url = await linkTwitterAccount(user.email.split("@")[0], newUser);
             await addUserToAuthorisedUsers(user.uid, userData, url);
             setAuthorisedUsers([...authorisedUsers, {description: userData.data.description, id: userData.data.id, name: userData.data.name, profile_image_url: userData.data.profile_image_url, username: userData.data.username, isConnected: false, authUrl: url}]);
             enqueueSnackbar('User added successfully.', { variant: 'success' });
