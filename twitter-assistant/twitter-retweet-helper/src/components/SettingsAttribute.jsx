@@ -13,7 +13,7 @@ const SettingsAttribute = ({ type, displayName, value, linkAction, loading, butt
         ></textarea> : <input
             readOnly={readOnly}
             id={type}
-            className="cursor-default h-[2.5rem] block w-1/2 ml-auto rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 py-1.5 px-3 focus:outline-none"
+            className="h-[2.5rem] block w-1/2 ml-auto rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 py-1.5 px-3 focus:outline-none"
             placeholder={value}
             onChange={(e) => {
                 onChangeFunction(e.target.value);
