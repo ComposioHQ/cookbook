@@ -3,7 +3,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from firebase.init import auth
-from composio_config import createNewEntity, isEntityConnected
+from composio_config import createNewEntity, isEntityConnected, createTwitterIntegrationAndInitiateAdminConnection
 import logging
 from quote_generator import generate_repost_quote
 from TweetAndRepost import tweet
@@ -42,11 +42,6 @@ class UserData(BaseModel):
     username: str
     appType: str
 
-class NewEntityData(BaseModel):
-    username: str
-    appType: str
-    redirectUrl: str
-
 class EnableTriggerData(BaseModel):
     username: str
 
@@ -62,14 +57,32 @@ class TweetRequestData(BaseModel):
     post: str
     repost_data_list: list
 
+class NewIntegrationData(BaseModel):
+    username: str
+    redirectUrl: str
+
+class NewEntityData(BaseModel):
+    username: str
+    newUserId: str
+    redirectUrl: str
+
+@app.post("/newintegration")
+async def handle_request(user_data: NewIntegrationData,
+                         decoded_token: dict = Depends(verify_token)):
+    user_id = decoded_token['uid']
+    username = user_data.username
+    redirectUrl = user_data.redirectUrl
+    res = createTwitterIntegrationAndInitiateAdminConnection(username, redirectUrl)
+    return res
+
 @app.post("/newentity")
 async def handle_request(user_data: NewEntityData,
                          decoded_token: dict = Depends(verify_token)):
     user_id = decoded_token['uid']
     username = user_data.username
-    appType = user_data.appType
+    newUserId = user_data.newUserId
     redirectUrl = user_data.redirectUrl
-    res = createNewEntity(username, appType, redirectUrl)
+    res = createNewEntity(username, newUserId, redirectUrl)
     return res
 
 @app.post("/enabletrigger")
