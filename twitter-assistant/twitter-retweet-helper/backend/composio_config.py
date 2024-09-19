@@ -3,9 +3,10 @@ from composio.client.exceptions import NoItemsFound
 import os
 from dotenv import load_dotenv
 load_dotenv()
+from firebase.init import update_twitter_integration_id, get_composio_api_key
 
 def isEntityConnected(ent_id: str, appType: str):
-    toolset = ComposioToolSet(api_key=os.environ.get("COMPOSIO_API_KEY"),
+    toolset = ComposioToolSet(api_key=get_composio_api_key(ent_id),
                               entity_id=ent_id)
     entity = toolset.get_entity()
     app_enum = getattr(App, appType)
@@ -23,9 +24,24 @@ def isEntityConnected(ent_id: str, appType: str):
         }
         return response
 
+def createTwitterIntegrationAndInitiateAdminConnection(ent_id: str, redirectUrl: str):
+    toolset = ComposioToolSet(api_key=get_composio_api_key(ent_id),
+                              entity_id=ent_id)
+    entity = toolset.get_entity()
+    twitter_app_id = "b3a9602b-731b-4044-9c9a-d0137ef5c887"
+    integration = entity.client.integrations.create(name="Tweetify_integration", app_id=twitter_app_id, auth_mode="oauth2", use_composio_auth=True)
+    update_twitter_integration_id(ent_id, integration.id)
+    request = entity.initiate_connection("TWITTER", redirect_url=redirectUrl, integration=integration)
+    response = {
+        "authenticated": "no",
+        "message": f"User {ent_id} is not yet authenticated with Twitter. Please authenticate.",
+        "url": request.redirectUrl
+    }
+    return response
+
 
 def createNewEntity(ent_id: str, appType: str, redirectUrl: str):
-    toolset = ComposioToolSet(api_key=os.environ.get("COMPOSIO_API_KEY"),
+    toolset = ComposioToolSet(api_key=get_composio_api_key(ent_id),
                               entity_id=ent_id)
     entity = toolset.get_entity()
     app_enum = getattr(App, appType)
@@ -40,13 +56,13 @@ def createNewEntity(ent_id: str, appType: str, redirectUrl: str):
         return response
 
     except NoItemsFound as e:
-        # Create a request to initiate connection
-        request = entity.initiate_connection(app_enum, redirect_url=redirectUrl)
+        integration = entity.client.integrations.get_by_id(get_twitter_integration_id(ent_id))
+        request = entity.initiate_connection(
+                app_name="TWITTER", redirect_url=redirectUrl, integration=integration
+        )
         response = {
             "authenticated": "no",
             "message": f"User {ent_id} is not yet authenticated with {appType}. Please authenticate.",
             "url": request.redirectUrl
         }
-        #poll until the connection is active
-        # connected_account = request.wait_until_active(client=toolset.client,timeout=100)
         return response
