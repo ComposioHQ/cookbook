@@ -8,9 +8,14 @@ import AddedUsers from "./AddedUsers";
 import { auth, getUserDetailsByUid, addUserToAuthorisedUsers } from "../config/firebase";
 import { useEffect } from "react";
 import { linkTwitterAccount } from "../utils/composio_utils";
+import AddNewUserOutline from "./AddNewUserOutline";
+import UsersIcon from "./UsersIcon";
+import AddNewUserSearchBar from "./AddNewUserSearchBar";
+
 
 const AddNewUser = ({ user }) => {
     const [newUser, setNewUser] = useState("");
+    const [newUserSearchBarOpen, setNewUserSearchBarOpen] = useState(false)
     const [addingUser, setAddingUser] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
 
@@ -59,7 +64,7 @@ const AddNewUser = ({ user }) => {
     };
 
     const handleNewAddUser = async (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         setAddingUser(true);
         if (!newUser.trim()) {
             enqueueSnackbar("Please enter a username.", { variant: 'warning' });
@@ -80,7 +85,7 @@ const AddNewUser = ({ user }) => {
         try {
             let url = await linkTwitterAccount(user.email.split("@")[0], newUser);
             await addUserToAuthorisedUsers(user.uid, userData, url);
-            setAuthorisedUsers([...authorisedUsers, {description: userData.data.description, id: userData.data.id, name: userData.data.name, profile_image_url: userData.data.profile_image_url, username: userData.data.username, isConnected: false, authUrl: url}]);
+            setAuthorisedUsers([...authorisedUsers, { description: userData.data.description, id: userData.data.id, name: userData.data.name, profile_image_url: userData.data.profile_image_url, username: userData.data.username, isConnected: false, authUrl: url }]);
             enqueueSnackbar('User added successfully.', { variant: 'success' });
         } catch (error) {
             console.error('Error:', error);
@@ -92,17 +97,10 @@ const AddNewUser = ({ user }) => {
     }
 
     return <>
-        <Separator title="Add Users" />
-        <form onSubmit={handleNewAddUser} className="flex gap-4 items-center justify-center mx-14">
-            <input value={newUser} onChange={(e) => setNewUser(e.target.value)} autoComplete="off" type="text" name="username" className="h-[2.5rem] block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 py-1.5 px-3" placeholder="username" />
-            <SmallButton
-                type="submit"
-                width="14rem"
-                name={addingUser ? <Audio height="15" color="white" ariaLabel="loading" /> : "Add User"}
-            />
-        </form>
-        <br />
-        <AddedUsers authorisedUsers={authorisedUsers} adminId={user.uid}/>
+        <UsersIcon />
+        <AddNewUserSearchBar open={newUserSearchBarOpen} setOpen={setNewUserSearchBarOpen} newUser={newUser} setNewUser={setNewUser} handleNewAddUser={handleNewAddUser} />
+        <AddNewUserOutline loading={addingUser} onClick={() => setNewUserSearchBarOpen(true)} />
+        <AddedUsers authorisedUsers={authorisedUsers} adminId={user.uid} />
     </>
 }
 
