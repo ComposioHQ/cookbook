@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const ReTweetCard = ({ user }) => {
+const ReTweetCard = ({ user, setAuthorisedUsers }) => {
     const [quote, setQuote] = useState();
     useEffect(() => {
         setQuote(user.quote || "");
@@ -27,6 +27,15 @@ const ReTweetCard = ({ user }) => {
                 rows={4}
                 onChange={(e) => {
                     setQuote(e.target.value);
+                    setAuthorisedUsers(prev => {
+                        const updatedUsers = prev.map(user => {
+                            if (user.id === user.id) {
+                                return { ...user, quote: e.target.value };
+                            }
+                            return user;
+                        });
+                        return updatedUsers;
+                    });
                 }}
             ></textarea>
         </div>
