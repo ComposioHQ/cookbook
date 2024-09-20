@@ -18,7 +18,7 @@ export default function AddNewUserSearchBar({ open, setOpen, newUser, setNewUser
 
     return (
         <Dialog
-            className="relative z-10"
+            className="relative z-30"
             open={open}
             onClose={() => {
                 setOpen(false)
