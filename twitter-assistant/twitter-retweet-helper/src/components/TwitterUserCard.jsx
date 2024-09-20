@@ -13,8 +13,8 @@ const TwitterUserCard = ({ user, action, connected, authUrl }) => {
                         <img className="h-14 w-14 rounded-full" src={user.profile_image_url} alt="" />
                     </div>
                     <div className="ml-4">
-                        <h3 className="text-base font-semibold leading-6 text-gray-900">{user.name}</h3>
-                        <p className="text-sm text-gray-500 hover:text-gray-700">
+                        <h3 className="text-base font-semibold leading-6 text-gray-900 text-left">{user.name}</h3>
+                        <p className="text-sm text-gray-500 hover:text-gray-700 text-left">
                             <a href={`https://x.com/${user.username}`} target="_blank" rel="noopener noreferrer">@{user.username}</a>
                         </p>
                     </div>
