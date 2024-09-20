@@ -40,7 +40,7 @@ const CreatePost = ({ user }) => {
         try {
             setPosting(true);
             const idToken = await auth.currentUser.getIdToken(true);
-            const tweetURL = import.meta.env.VITE_BACKEND_URL + "/tweet";
+            const tweetURL = import.meta.env.VITE_BACKEND_URL + "/newtweetandrepost";
             const repostDataList = authorisedUsers.map(user => ({
                 entity_id: user.username,
                 quote: user.quote
@@ -128,7 +128,7 @@ const CreatePost = ({ user }) => {
         </form>
         <div className="pt-12">
             <Separator title="Retweet Quotes" />
-            <AuthorizedUsers authorisedUsers={authorisedUsers} />
+            <AuthorizedUsers authorisedUsers={authorisedUsers} setAuthorisedUsers={setAuthorisedUsers}/>
         </div>
     </div>
 };
