@@ -33,6 +33,20 @@ const AddNewUser = ({ user }) => {
     };
 
     useEffect(() => {
+        const handleKeyPress = (event) => {
+            if ((event.ctrlKey || event.metaKey) && event.key === 'u') {
+                setNewUserSearchBarOpen(true);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyPress);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, []);
+
+    useEffect(() => {
         const initializeAuthorisedUsersData = async () => {
             if (!userDetails) {
                 const details = await fetchUserDetails();
