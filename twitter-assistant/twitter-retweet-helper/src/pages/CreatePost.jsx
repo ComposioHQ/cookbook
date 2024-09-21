@@ -1,12 +1,11 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useSnackbar } from 'notistack'
 import Separator from "../components/Separator";
 import AuthorizedUsers from "../components/AuthorizedUsers";
 import { getUserDetailsByUid } from "../config/firebase";
-import SmallButton from "../components/SmallButton";
 import axios from "axios";
 import { auth } from "../config/firebase";
-import { Audio } from 'react-loader-spinner';
+import CreatePostTextArea from "../components/CreatePostTextArea";
 
 const CreatePost = ({ user }) => {
     const { enqueueSnackbar } = useSnackbar();
@@ -15,13 +14,16 @@ const CreatePost = ({ user }) => {
     const [loading, setLoading] = useState(false);
     const [posting, setPosting] = useState(false);
     const [generatingQuotes, setGeneratingQuotes] = useState(false);
+    const [allAuthorisedUsers, setAllAuthorisedUsers] = useState([]);
     const fetchUserDetails = async () => {
         setLoading(true);
         try {
             const details = await getUserDetailsByUid(user.uid);
             if (details && details.authorisedUsers) {
-                const connectedUsers = details.authorisedUsers.filter(user => user.isConnected === true);
-                setAuthorisedUsers(connectedUsers);
+                const connectedUsers = details.authorisedUsers
+                    .filter(user => user.isConnected === true)
+                    .map(user => ({ ...user, repostWithQuote: false }));
+                setAllAuthorisedUsers(connectedUsers);
             }
         } catch (error) {
             console.error("Error fetching user details:", error);
@@ -82,11 +84,11 @@ const CreatePost = ({ user }) => {
                     'Content-Type': 'application/json'
                 }
             });
-            
+
             const data = response.data;
             const updatedUsers = authorisedUsers.map((user, index) => ({
                 ...user,
-                quote: data.quotes[index] ? data.quotes[index].replace(/^"|"$/g, '') : ''
+                quote: user.repostWithQuote && data.quotes[index] ? data.quotes[index].replace(/^"|"$/g, '') : ''
             }));
             setAuthorisedUsers(updatedUsers);
         } catch (error) {
@@ -102,33 +104,15 @@ const CreatePost = ({ user }) => {
     }, []);
 
     return <div className="flex flex-1 flex-col gap-6 min-h-screen py-8 px-4 mx-auto mt-10 max-w-screen-md text-center lg:py-16 lg:px-12">
-        <Separator title="Create Post" />
-        <form onSubmit={handlePost} className="flex flex-col gap-8 items-center justify-center">
-            <textarea
-                className="block w-2/3 mx-auto rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 py-1.5 px-3"
-                placeholder="Write your post here..."
-                value={post}
-                rows={5}
-                onChange={(e) => {
-                    setPost(e.target.value);
-                }}
-            ></textarea>
-            <div className="flex gap-4">
-                <SmallButton
-                    type="submit"
-                    width="10rem"
-                    name={posting ? <Audio height="15" color="white" ariaLabel="loading" /> : "Post"}
-                />
-                <SmallButton
-                    width="14rem"
-                    name={generatingQuotes ? <Audio height="15" color="white" ariaLabel="loading" /> : "Generate Retweet Quotes"}
-                    action={handleGenerateQuotes}
-                />
+        <div className="border border-gray-200 rounded-md bg-white px-16 py-8 gap-6 flex flex-col">
+            <Separator title="Create Post" />
+            <div className="flex flex-col gap-8 items-center justify-center">
+                <CreatePostTextArea post={post} setPost={setPost} handlePost={handlePost} handleGenerateQuotes={handleGenerateQuotes} posting={posting} generatingQuotes={generatingQuotes} />
             </div>
-        </form>
+        </div>
         <div className="pt-12">
-            <Separator title="Retweet Quotes" />
-            <AuthorizedUsers authorisedUsers={authorisedUsers} setAuthorisedUsers={setAuthorisedUsers}/>
+            <Separator title="Reposters" />
+            <AuthorizedUsers authorisedUsers={authorisedUsers} setAuthorisedUsers={setAuthorisedUsers} allAuthorisedUsers={allAuthorisedUsers} setAllAuthorisedUsers={setAllAuthorisedUsers}/>
         </div>
     </div>
 };

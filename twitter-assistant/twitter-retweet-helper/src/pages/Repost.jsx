@@ -3,15 +3,15 @@ import { useSnackbar } from 'notistack'
 import Separator from "../components/Separator";
 import AuthorizedUsers from "../components/AuthorizedUsers";
 import { getUserDetailsByUid } from "../config/firebase";
-import SmallButton from "../components/SmallButton";
 import axios from "axios";
 import { auth } from "../config/firebase";
 import { Audio } from 'react-loader-spinner';
 import SettingsAttribute from "../components/SettingsAttribute";
+import GetPostTextArea from "../components/GetPostTextArea";
 
 const CreatePost = ({ user }) => {
     const { enqueueSnackbar } = useSnackbar();
-    const [twitterPostUrl, setTwitterPostUrl] = useState("");
+    const [twitterPostUrl, setTwitterPostUrl] = useState("tweet url");
     const [tweetId, setTweetId] = useState("");
     const [twitterPostUrlLoading, setTwitterPostUrlLoading] = useState(false);
     const [post, setPost] = useState("");
@@ -19,6 +19,7 @@ const CreatePost = ({ user }) => {
     const [loading, setLoading] = useState(false);
     const [posting, setPosting] = useState(false);
     const [generatingQuotes, setGeneratingQuotes] = useState(false);
+    const [allAuthorisedUsers, setAllAuthorisedUsers] = useState([]);
 
     const handleGetTweetText = async () => {
         setTwitterPostUrlLoading(true);
@@ -54,8 +55,10 @@ const CreatePost = ({ user }) => {
         try {
             const details = await getUserDetailsByUid(user.uid);
             if (details && details.authorisedUsers) {
-                const connectedUsers = details.authorisedUsers.filter(user => user.isConnected === true);
-                setAuthorisedUsers(connectedUsers);
+                const connectedUsers = details.authorisedUsers
+                    .filter(user => user.isConnected === true)
+                    .map(user => ({ ...user, repostWithQuote: false }));
+                setAllAuthorisedUsers(connectedUsers);
             }
         } catch (error) {
             console.error("Error fetching user details:", error);
@@ -117,10 +120,12 @@ const CreatePost = ({ user }) => {
             });
 
             const data = response.data;
-            const updatedUsers = authorisedUsers.map((user, index) => ({
-                ...user,
-                quote: data.quotes[index] ? data.quotes[index].replace(/^"|"$/g, '') : ''
-            }));
+            const updatedUsers = authorisedUsers.map((user, index) => {
+                return {
+                    ...user,
+                    quote: user.repostWithQuote && data.quotes[index] ? data.quotes[index].replace(/^"|"$/g, '') : ''
+                };
+            });
             setAuthorisedUsers(updatedUsers);
         } catch (error) {
             console.error("Error generating quotes:", error);
@@ -135,35 +140,17 @@ const CreatePost = ({ user }) => {
     }, []);
 
     return <div className="flex flex-1 flex-col gap-6 min-h-screen py-8 px-4 mx-auto mt-10 max-w-screen-md text-center lg:py-16 lg:px-12">
-        <Separator title="Existing Post" />
-        <form onSubmit={handlePost} className="flex flex-col gap-8 items-center justify-center">
-            <SettingsAttribute type="password" displayName="Tweet Url" value={twitterPostUrl} linkAction={handleGetTweetText} loading={twitterPostUrlLoading} buttonName="Get" onChangeFunction={setTwitterPostUrl} readOnly={false}/>
-            <textarea
-                className="cursor-default block w-2/3 mx-auto focus:outline-none rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 py-1.5 px-3"
-                placeholder="Tweet content.."
-                value={post}
-                rows={5}
-                onChange={(e) => {
-                    setPost(e.target.value);
-                }}
-                readOnly={true}
-            ></textarea>
-            <div className="flex gap-4">
-                <SmallButton
-                    type="submit"
-                    width="10rem"
-                    name={posting ? <Audio height="15" color="white" ariaLabel="loading" /> : "Retweet"}
-                />
-                <SmallButton
-                    width="14rem"
-                    name={generatingQuotes ? <Audio height="15" color="white" ariaLabel="loading" /> : "Generate Retweet Quotes"}
-                    action={handleGenerateQuotes}
-                />
+        <div className="border border-gray-200 rounded-md bg-white px-16 py-8 gap-6 flex flex-col">
+            <Separator title="Get Post" />
+            <div className="flex flex-col gap-4 items-center justify-center">
+                <SettingsAttribute type="password" displayName="Tweet Url" value={twitterPostUrl} linkAction={handleGetTweetText} loading={twitterPostUrlLoading} buttonName="Get" onChangeFunction={setTwitterPostUrl} readOnly={false} nolabel={true} placeholder="enter tweet url" />
+                <GetPostTextArea post={post} setPost={setPost} handlePost={handlePost} handleGenerateQuotes={handleGenerateQuotes} posting={posting} generatingQuotes={generatingQuotes} />
             </div>
-        </form>
-        <div className="pt-12">
-            <Separator title="Retweet Quotes" />
-            <AuthorizedUsers authorisedUsers={authorisedUsers} setAuthorisedUsers={setAuthorisedUsers}/>
+        </div>
+        {/* <div className="border border-gray-200 rounded-md flex flex-col gap-4 py-5 mt-12"> */}
+        <div className="flex flex-col py-5 mt-12">
+            <Separator title="Reposters" />
+            <AuthorizedUsers authorisedUsers={authorisedUsers} setAuthorisedUsers={setAuthorisedUsers} allAuthorisedUsers={allAuthorisedUsers} setAllAuthorisedUsers={setAllAuthorisedUsers}/>
         </div>
     </div>
 };

@@ -41,9 +41,11 @@ const Settings = ({ user }) => {
     }
 
     return <div className="flex flex-1 flex-col gap-6 min-h-screen py-8 px-4 mx-auto mt-10 max-w-screen-md text-center lg:py-16 lg:px-12">
-        <Separator title="Connect Accounts" />
-        <SettingsAttribute type="password" displayName="Composio API Key" value={composioApiKey} linkAction={handleChangeComposioApiKey} loading={composioApiKeyLoading} buttonName="Add" onChangeFunction={setComposioApiKey} readOnly={false} />
-        <SettingsAttribute type="twitter" displayName="Twitter Account" value={twitterAccount} linkAction={handleLinkTwitterAccount} loading={twitterAccountLoading} />
+        <div className="border border-gray-200 rounded-md bg-white px-16 py-8 gap-6 flex flex-col">
+            <Separator title="Connect Accounts" />  
+            <SettingsAttribute type="password" displayName="Composio API Key" value={composioApiKey} linkAction={handleChangeComposioApiKey} loading={composioApiKeyLoading} buttonName="Add" onChangeFunction={setComposioApiKey} readOnly={false} />
+            <SettingsAttribute type="twitter" displayName="Twitter Account" value={twitterAccount} linkAction={handleLinkTwitterAccount} loading={twitterAccountLoading} />
+        </div>
         <br />
         <AddNewUser user={user} />
     </div>
