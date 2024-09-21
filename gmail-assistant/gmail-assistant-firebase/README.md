@@ -1,7 +1,13 @@
-
-
 # ⚡️GmailGenius: Supercharge your Gmail
 *Automatically processes new emails, extracts data from attachments, and organizes everything in a spreadsheet!*
+
+## Why GmailGenius?
+
+I developed GmailGenius because managing invoices felt like trying to find a needle in a haystack—while blindfolded! I was constantly losing track of due dates and getting hit with late fees, which turned my financial life into a chaotic mess. So, I thought, why not create an AI buddy to handle the email chaos? With GmailGenius, users can connect their Gmail, specify keywords, and let the AI scan for invoices, extracting all the important details straight into Google Sheets. I built the AI agents using CrewAI, which allowed me to create specialized agents tailored for this task. The real magic comes from [Composio (https://app.composio.dev)’s powerful [Gmail](https://app.composio.dev/app/gmail) and [Google sheets](https://app.composio.dev/app/googlesheets) tools, which made integrating these features a breeze—just plug and play! Thanks to Composio, I could focus on creating a seamless user experience while my AI genius does the heavy lifting. Now you can say goodbye to late fees and hello to a more organized inbox!
+
+#### Checkout how others are using GmailGenius:
+[![Open in Dev.to](https://img.shields.io/badge/Open%20in-Dev.to-green?logo=dev.to&style=for-the-badge)](https://dev.to/composiodev/i-built-an-ai-tool-to-handle-my-moms-invoices-and-saved-her-20-hours-of-work-44h1)
+[![Open in Reddit](https://img.shields.io/badge/Open%20in-Reddit-blue?logo=reddit&style=for-the-badge)](https://www.reddit.com/r/selfhosted/comments/1f7f8f4/i_built_an_ai_tool_to_handle_my_moms_invoices_and/)
 
 ## Demo
 ### Check it out on Replit
@@ -93,8 +99,4 @@ If you're prompted to login & enter API key, run the below command to login
 ```
 
 You'll be redirected to composio website, login, get the API key and paste it
-
-## 🛡️ License
-
-Composio is licensed under the Elastic License - see the [LICENSE](https://github.com/composiodev/composio/blob/master/LICENSE) file for details.
   
