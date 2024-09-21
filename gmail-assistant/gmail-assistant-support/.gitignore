@@ -7,8 +7,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+.env
+backend/firebase/support-bot-49f93-94ae307979d3.json
+backend/attachments
+
 backend/__pycache__
-.DS_Store
+backend/genius-57d8d-firebase-adminsdk-ue7u9-90656332c6.json
 
 node_modules
 dist

@@ -1,0 +1,10 @@
+crewai
+composio-crewai
+langchain-openai
+python-dotenv
+crewai_tools
+fastapi
+uvicorn
+langchain_google_genai
+firebase-admin
+
