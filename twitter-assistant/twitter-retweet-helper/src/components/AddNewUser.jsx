@@ -109,13 +109,13 @@ const AddNewUser = ({ user }) => {
             setNewUser("");
         }
     }
-
-    return <>
+{/* <div className="border border-gray-200 rounded-md flex flex-col gap-4 py-5"></div> */}
+    return <div className="flex flex-col gap-4 py-5">
         <UsersIcon />
         <AddNewUserSearchBar open={newUserSearchBarOpen} setOpen={setNewUserSearchBarOpen} newUser={newUser} setNewUser={setNewUser} handleNewAddUser={handleNewAddUser} />
         <AddNewUserOutline loading={addingUser} onClick={() => setNewUserSearchBarOpen(true)} />
         <AddedUsers authorisedUsers={authorisedUsers} adminId={user.uid} />
-    </>
+    </div>
 }
 
 export default AddNewUser;

@@ -32,8 +32,21 @@ const AddedUsers = ({ authorisedUsers, adminId }) => {
         checkUsersConnection();
     }, [checkUsersConnection]);
 
-    return (
-        <div className="flex flex-col justify-center gap-4">
+    return (<>
+        <input
+            type="text"
+            placeholder="Search users..."
+            className="border border-gray-300 rounded-md mx-8 mt-8"
+            onChange={(e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                setConnectedUsers(
+                    authorisedUsers.filter((user) =>
+                        user.username.toLowerCase().includes(searchTerm)
+                    )
+                );
+            }}
+        />
+        <div className="flex flex-col gap-4 h-96 overflow-y-scroll">
             {fetchingUsers ? (
                 <SkeletonLoader />
             ) : (
@@ -46,6 +59,7 @@ const AddedUsers = ({ authorisedUsers, adminId }) => {
                 )
             )}
         </div>
+    </>
     );
 }
 

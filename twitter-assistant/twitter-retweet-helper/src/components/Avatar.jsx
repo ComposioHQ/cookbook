@@ -39,10 +39,10 @@ const Avatar = ({ user }) => {
                         <Link to="/" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Home</Link>
                     </li>
                     <li>
-                        <Link to="/createpost" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Create Post</Link>
+                        <Link to="/createpost" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Create New Tweet & Repost</Link>
                     </li>
                     <li>
-                        <Link to="/repost" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Repost</Link>
+                        <Link to="/repost" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Repost Existing Tweet</Link>
                     </li>
                     <li>
                         <Link to="/settings" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</Link>

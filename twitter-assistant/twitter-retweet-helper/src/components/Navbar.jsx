@@ -1,5 +1,3 @@
-import { logOut } from "../config/firebase";
-import { Link } from "react-router-dom";
 import Avatar from "./Avatar";
 import LogoComponent from "./LogoComponent";
 const Navbar = ({ user }) => {

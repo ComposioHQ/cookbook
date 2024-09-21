@@ -1,5 +1,5 @@
-import { Loader } from 'rsuite';
 import 'rsuite/Loader/styles/index.css';
+import { Loader } from 'rsuite';
 
 export default function AddNewUserOutline({ loading, onClick }) {
   return (
